@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Britten &mdash; RCA Mapping Workshop Facilitator Guide</title>
+<style>
+  :root {
+    --sf-navy: #032D60;
+    --sf-blue: #0176D3;
+    --sf-blue-light: #E5F1FB;
+    --sf-grey-100: #F3F3F3;
+    --sf-grey-300: #C9C9C9;
+    --sf-grey-700: #444;
+    --easy: #2E7D32;
+    --easy-bg: #E8F5E9;
+    --med: #E65100;
+    --med-bg: #FFF3E0;
+    --large: #C62828;
+    --large-bg: #FFEBEE;
+    --oos: #455A64;
+    --oos-bg: #ECEFF1;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Salesforce Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0; padding: 0;
+    background: #FAFAFA;
+    color: #181818;
+    line-height: 1.5;
+  }
+  header {
+    background: linear-gradient(135deg, var(--sf-navy) 0%, var(--sf-blue) 100%);
+    color: white;
+    padding: 32px 48px;
+  }
+  header h1 { margin: 0 0 6px; font-size: 28px; font-weight: 600; }
+  header .sub { opacity: 0.9; font-size: 15px; }
+  main { max-width: 1180px; margin: 0 auto; padding: 32px 48px 64px; }
+  h2 {
+    color: var(--sf-navy);
+    font-size: 22px;
+    border-bottom: 2px solid var(--sf-blue);
+    padding-bottom: 6px;
+    margin-top: 40px;
+  }
+  h3 { color: var(--sf-navy); margin-top: 24px; font-size: 17px; }
+  h4 { color: var(--sf-navy); margin: 18px 0 6px; font-size: 15px; }
+  p { font-size: 14px; }
+
+  .lede {
+    background: var(--sf-blue-light);
+    border-left: 4px solid var(--sf-blue);
+    padding: 16px 20px;
+    border-radius: 6px;
+    margin: 18px 0 8px;
+    font-size: 14.5px;
+  }
+
+  .toc {
+    background: white;
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin: 18px 0 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .toc ol { margin: 6px 0 0; padding-left: 22px; font-size: 14px; columns: 2; }
+  .toc a { color: var(--sf-blue); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  /* Segment cards */
+  .segment {
+    background: white;
+    border-radius: 10px;
+    padding: 22px 26px;
+    margin: 18px 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    border-left: 4px solid var(--sf-blue);
+  }
+  .segment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .segment-header h3 { margin: 0; }
+  .segment-meta {
+    display: flex;
+    gap: 8px;
+    font-size: 12px;
+  }
+  .chip {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    font-size: 11px;
+  }
+  .chip.time { background: var(--sf-blue-light); color: var(--sf-navy); }
+  .chip.driver { background: var(--easy-bg); color: var(--easy); }
+  .chip.driver.you { background: var(--med-bg); color: var(--med); }
+  .chip.driver.cust { background: var(--easy-bg); color: var(--easy); }
+  .chip.driver.team { background: #F3E5F5; color: #6A1B9A; }
+
+  .goal {
+    background: var(--easy-bg);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 8px 0 14px;
+    font-size: 13.5px;
+  }
+  .goal b { color: var(--easy); }
+
+  .script {
+    background: #FAFCFE;
+    border: 1px dashed var(--sf-blue);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 10px 0;
+    font-size: 13.5px;
+    font-style: italic;
+    color: #2A2A2A;
+  }
+  .script::before {
+    content: "Say:";
+    display: block;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 11px;
+    color: var(--sf-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+
+  .questions {
+    background: var(--sf-grey-100);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 10px 0;
+  }
+  .questions h5 {
+    margin: 0 0 6px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--sf-grey-700);
+  }
+  .questions ul { margin: 0; padding-left: 20px; font-size: 13.5px; }
+  .questions li { margin: 4px 0; }
+  .questions li b { color: var(--sf-navy); }
+
+  .output {
+    background: var(--med-bg);
+    border-left: 3px solid var(--med);
+    border-radius: 4px;
+    padding: 10px 14px;
+    margin: 10px 0;
+    font-size: 13px;
+  }
+  .output b { color: var(--med); }
+
+  .watchout {
+    background: var(--large-bg);
+    border-left: 3px solid var(--large);
+    border-radius: 4px;
+    padding: 10px 14px;
+    margin: 10px 0;
+    font-size: 13px;
+  }
+  .watchout b { color: var(--large); }
+
+  .lifeline {
+    background: #F3E5F5;
+    border-left: 3px solid #6A1B9A;
+    border-radius: 4px;
+    padding: 10px 14px;
+    margin: 10px 0;
+    font-size: 13px;
+  }
+  .lifeline b { color: #6A1B9A; }
+
+  /* Pre-workshop checklist */
+  .checklist {
+    background: white;
+    border-radius: 8px;
+    padding: 16px 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .checklist ul { list-style: none; padding-left: 0; margin: 0; font-size: 14px; }
+  .checklist li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--sf-grey-100);
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist .box {
+    flex-shrink: 0;
+    width: 18px; height: 18px;
+    border: 2px solid var(--sf-blue);
+    border-radius: 3px;
+    margin-top: 2px;
+  }
+
+  /* Cheatsheet */
+  .cheat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .cheat {
+    background: white;
+    border-radius: 6px;
+    padding: 12px 16px;
+    border: 1px solid var(--sf-grey-300);
+    font-size: 13px;
+  }
+  .cheat b { color: var(--sf-navy); display: block; margin-bottom: 4px; }
+  .cheat .their { color: var(--med); font-size: 12px; margin-top: 4px; display: block; }
+
+  /* Confidence tactics */
+  .tactic-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-top: 12px;
+  }
+  .tactic {
+    background: white;
+    border-radius: 8px;
+    padding: 14px 18px;
+    border-top: 3px solid var(--easy);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .tactic h4 { margin-top: 0; color: var(--easy); }
+  .tactic p { margin: 0 0 6px; font-size: 13px; }
+  .tactic .quote { font-style: italic; color: var(--sf-grey-700); font-size: 12.5px; }
+
+  /* Agenda timeline */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    margin-top: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 14px;
+  }
+  th, td {
+    padding: 10px 14px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--sf-grey-100);
+  }
+  th {
+    background: var(--sf-blue-light);
+    color: var(--sf-navy);
+    font-weight: 600;
+    font-size: 12.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  tr:last-child td { border-bottom: none; }
+  td.time { font-weight: 600; color: var(--sf-navy); white-space: nowrap; }
+
+  .pill { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+  .pill.you { background: var(--med-bg); color: var(--med); border: 1px solid var(--med); }
+  .pill.cust { background: var(--easy-bg); color: var(--easy); border: 1px solid var(--easy); }
+  .pill.team { background: #F3E5F5; color: #6A1B9A; border: 1px solid #6A1B9A; }
+
+  footer {
+    text-align: center;
+    color: var(--sf-grey-700);
+    font-size: 12px;
+    padding: 24px;
+    border-top: 1px solid var(--sf-grey-300);
+    margin-top: 32px;
+  }
+
+  @media print {
+    body { background: white; }
+    header { background: var(--sf-navy) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .segment { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Britten &mdash; RCA Mapping Workshop</h1>
+  <div class="sub">Facilitator's Guide for the Architect Leading the Room</div>
+</header>
+
+<main>
+
+  <p class="lede">
+    <b>Your job in this workshop is not to teach RCA.</b> Your job is to <b>map Britten's current state to RCA capabilities</b>, surface the right questions, and leave the room with shared confidence and a clear next step. You bring 10+ years of Salesforce judgment. Vandeep (RevCloud SE) brings deep RCA expertise. Anthony and Colin bring 15 years of Britten reality. Your value is the <em>connective tissue</em> between those three. This guide gives you the flow, the script, and the lifelines so you can lead with confidence even where your RCA knowledge is still building.
+  </p>
+
+  <div class="toc">
+    <h3 style="margin-top: 0;">Contents</h3>
+    <ol>
+      <li><a href="#mindset">Your Mindset Going In</a></li>
+      <li><a href="#prep">Pre-Workshop Prep (Do This Week)</a></li>
+      <li><a href="#agenda">Workshop Agenda at a Glance</a></li>
+      <li><a href="#opening">Segment 1 &mdash; Opening &amp; Alignment</a></li>
+      <li><a href="#current">Segment 2 &mdash; Confirm Current State</a></li>
+      <li><a href="#mapping">Segment 3 &mdash; Map to RCA</a></li>
+      <li><a href="#hard">Segment 4 &mdash; The Hard Questions</a></li>
+      <li><a href="#risks">Segment 5 &mdash; Risks &amp; Open Items</a></li>
+      <li><a href="#close">Segment 6 &mdash; Close &amp; Commitments</a></li>
+      <li><a href="#cheat">RCA Cheatsheet (Britten Terms &harr; RCA Terms)</a></li>
+      <li><a href="#tactics">Confidence Tactics for Moments You Don't Know</a></li>
+      <li><a href="#kit">Facilitator Kit (What to Print &amp; Bring)</a></li>
+    </ol>
+  </div>
+
+  <h2 id="mindset">1. Your Mindset Going In</h2>
+
+  <div class="tactic-grid">
+    <div class="tactic">
+      <h4>You are the orchestrator, not the SME.</h4>
+      <p>Lead the room. Hold the agenda. Ask great questions. Defer RCA depth to Vandeep when needed &mdash; that is the design, not a failure.</p>
+    </div>
+    <div class="tactic">
+      <h4>Britten's language wins over RCA jargon.</h4>
+      <p>Anthony talks in Jobs, Job Items, Estimator, Cost-Plus. Mirror those terms first, then bridge to RCA constructs. Don't make them learn your vocabulary on day one.</p>
+    </div>
+    <div class="tactic">
+      <h4>Whiteboard everything. Slides are background.</h4>
+      <p>The fastest way to build trust is to physically draw their world on the wall and watch them correct you. Bring markers. Use them.</p>
+    </div>
+    <div class="tactic">
+      <h4>Anthony is wary of partners. Earn it slowly.</h4>
+      <p>The 2014 implementation got scrapped. The "10-foot pole" architect anecdote is a real memory. Show your work, name your assumptions, invite pushback. <em>Don't</em> oversell.</p>
+    </div>
+  </div>
+
+  <h2 id="prep">2. Pre-Workshop Prep (Do This Week)</h2>
+
+  <h3>3&ndash;5 days before</h3>
+  <div class="checklist">
+    <ul>
+      <li><span class="box"></span><div><b>Sync with Vandeep (RevCloud SE).</b> 30 min. Walk through Britten's current state document and the assessment HTML. Get him to point at the 3&ndash;4 RCA areas <em>he</em> would emphasize for Britten. Ask him to be present and willing to take 1&ndash;2 deep questions live.</div></li>
+      <li><span class="box"></span><div><b>Sync with Lily (AE) and Mitch (RevCloud AE).</b> 15 min. Confirm desired commercial outcome of the workshop &mdash; is it scope agreement? Partner endorsement? Both? You facilitate to that outcome.</div></li>
+      <li><span class="box"></span><div><b>Send Britten a 1-pager pre-read.</b> Include the assessment's "Priorities &amp; Challenges" section and the "What We're Looking At" scope. Ask Anthony to flag anything wrong before the workshop.</div></li>
+      <li><span class="box"></span><div><b>Ask Anthony for one screenshot of the Print Estimator</b> and one of a Job_Item__c record (with sensitive data redacted). Whiteboard from real screens, not abstractions.</div></li>
+      <li><span class="box"></span><div><b>Confirm partner attendance.</b> Per the briefing note, the partner needs to demonstrate (a) data migration strategy and (b) Constraint Builder for cost-plus pricing. Make sure they know that's the expectation.</div></li>
+      <li><span class="box"></span><div><b>Decide format.</b> In-person on Britten's campus is ideal. Whiteboard, sticky notes, 3 hours minimum.</div></li>
+    </ul>
+  </div>
+
+  <h3>Day before</h3>
+  <div class="checklist">
+    <ul>
+      <li><span class="box"></span><div><b>Re-read the 4/8 and 4/23 meeting notes.</b> Have 3&ndash;4 specific Anthony quotes in your head ("not with a 10-foot pole", "everything is custom", "two-man team"). Using their own words back to them is the fastest trust-builder.</div></li>
+      <li><span class="box"></span><div><b>Print the facilitator kit</b> (Section 12 below).</div></li>
+      <li><span class="box"></span><div><b>Sketch the current-state architecture</b> from memory on a piece of paper. If you can't, do it now. The first 20 minutes of the workshop is you drawing this on a whiteboard.</div></li>
+      <li><span class="box"></span><div><b>Pre-write the 3 questions you most want answered.</b> Hide them at the bottom of your notes. If by hour 2 they aren't answered, ask them.</div></li>
+    </ul>
+  </div>
+
+  <h2 id="agenda">3. Workshop Agenda at a Glance</h2>
+  <p style="font-size: 14px; color: var(--sf-grey-700);">Total: 3 hours with one break. Compress to 2 hours by tightening segments 4 and 5.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 11%;">Time</th>
+        <th style="width: 26%;">Segment</th>
+        <th style="width: 38%;">Goal</th>
+        <th style="width: 12%;">Driver</th>
+        <th style="width: 13%;">Output</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="time">0:00&ndash;0:15</td><td><b>Open &amp; Align</b></td><td>Set purpose, ground rules, agree on what "success" looks like.</td><td><span class="pill you">You</span></td><td>Shared agenda</td></tr>
+      <tr><td class="time">0:15&ndash;1:00</td><td><b>Confirm Current State</b></td><td>Britten walks the room through how quote &rarr; job &rarr; invoice works today. You whiteboard.</td><td><span class="pill cust">Britten</span></td><td>Current-state diagram</td></tr>
+      <tr><td class="time">1:00&ndash;2:00</td><td><b>Map to RCA, Pillar by Pillar</b></td><td>For each Britten capability, walk through the RCA equivalent. Vandeep narrates the RCA side.</td><td><span class="pill team">Joint</span></td><td>Side-by-side mapping</td></tr>
+      <tr><td class="time">2:00&ndash;2:10</td><td colspan="4"><i>Break</i></td></tr>
+      <tr><td class="time">2:10&ndash;2:40</td><td><b>The Hard Questions</b></td><td>Pricing parity, data migration, Constraint Builder for cost-plus. Partner demonstrates here.</td><td><span class="pill team">Partner + Vandeep</span></td><td>Validated approach</td></tr>
+      <tr><td class="time">2:40&ndash;2:55</td><td><b>Risks &amp; Open Items</b></td><td>What worries Anthony and Colin? Park what we can't answer today.</td><td><span class="pill you">You</span></td><td>Parking lot</td></tr>
+      <tr><td class="time">2:55&ndash;3:00</td><td><b>Close &amp; Commitments</b></td><td>Three concrete next steps with names and dates.</td><td><span class="pill you">You</span></td><td>Action list</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="opening">4. Segment 1 &mdash; Opening &amp; Alignment <span style="font-size: 13px; color: var(--sf-grey-700); font-weight: normal;">(15 min)</span></h2>
+
+  <div class="segment">
+    <div class="segment-header">
+      <h3>Open the room</h3>
+      <div class="segment-meta">
+        <span class="chip time">15 min</span>
+        <span class="chip driver you">You drive</span>
+      </div>
+    </div>
+    <div class="goal"><b>Goal:</b> set purpose, build psychological safety, get Anthony and Colin nodding before we go deeper.</div>
+
+    <h4>Flow</h4>
+    <ol style="font-size: 14px;">
+      <li>Welcome &amp; intros around the room (1 min per person).</li>
+      <li>State the purpose &mdash; one sentence (script below).</li>
+      <li>Acknowledge what we already know about Britten's environment. Read back 2&ndash;3 specific things they told us so they know we listened.</li>
+      <li>Ask: <em>"What does a great outcome of today look like for you?"</em> Capture their answers on the wall.</li>
+      <li>Walk through the 3-hour agenda. Get explicit "yes" before moving on.</li>
+    </ol>
+
+    <div class="script">
+      The reason we're here today is to map how Britten runs sales, jobs, and invoicing today onto Revenue Cloud Advanced &mdash; together. We're not pitching. We're not trying to convince you of anything. We're stress-testing whether RCA is actually the right fit for the way you work, and what would have to be true for it to succeed. By the end of today, we'll have a side-by-side picture of your current state and the RCA target state, a clear list of the hard questions, and three concrete next steps. If at any point something doesn't sound right, please push back &mdash; that's the most useful thing you can do for us.
+    </div>
+
+    <div class="questions">
+      <h5>Opening questions (capture answers visibly)</h5>
+      <ul>
+        <li><b>What does a great outcome of today look like for you?</b></li>
+        <li><b>What's the one thing you'd hate for us to miss?</b></li>
+        <li><b>Anything different from when you last spoke to Mitch and Lily that we should know?</b></li>
+      </ul>
+    </div>
+
+    <div class="watchout"><b>Watch-out:</b> don't let the opening become a re-explanation of RCA. Keep it short. The first hour belongs to <em>them</em> talking, not us.</div>
+  </div>
+
+  <h2 id="current">5. Segment 2 &mdash; Confirm Current State <span style="font-size: 13px; color: var(--sf-grey-700); font-weight: normal;">(45 min)</span></h2>
+
+  <div class="segment">
+    <div class="segment-header">
+      <h3>They walk us through it. We whiteboard.</h3>
+      <div class="segment-meta">
+        <span class="chip time">45 min</span>
+        <span class="chip driver cust">Britten drives</span>
+      </div>
+    </div>
+    <div class="goal"><b>Goal:</b> have Anthony and Colin walk us through their world, end-to-end, while you draw it. By the end, the room shares one picture.</div>
+
+    <h4>Flow</h4>
+    <ol style="font-size: 14px;">
+      <li>Draw four boxes on the whiteboard: <strong>Opportunity &rarr; Quote &rarr; Job &rarr; Invoice</strong>.</li>
+      <li>Ask Anthony to walk through what happens at each box. Add objects, automations, integrations as he speaks.</li>
+      <li>Add Microsoft Business Central, Avalara, Authorize.net, customer-portal APIs as side boxes.</li>
+      <li>Highlight the Print Estimator separately &mdash; this is the keystone object of the whole conversation.</li>
+      <li>Ask the divisional question: <em>"Where does this picture break for the other three divisions?"</em> Capture differences in red.</li>
+    </ol>
+
+    <div class="script">
+      Anthony, would you walk us through what happens from the moment a sales rep creates an opportunity all the way to when the customer pays? Use whatever language you'd use with a new hire. Don't translate to Salesforce-speak for our benefit. I'll capture it on the wall and stop you with questions as we go.
+    </div>
+
+    <div class="questions">
+      <h5>Probing questions to ask <em>during</em> their walkthrough</h5>
+      <ul>
+        <li><b>"Walk me through what the Print Estimator actually calculates."</b> &mdash; force them to articulate the math.</li>
+        <li><b>"How do you update a substrate cost when it changes?"</b> &mdash; surfaces the dev-dependency pain.</li>
+        <li><b>"What happens between Closed-Won and the production floor seeing the job?"</b> &mdash; surfaces the Job__c trigger.</li>
+        <li><b>"When one quote line becomes multiple shipments, how do you handle that today?"</b> &mdash; surfaces the junction-object workaround.</li>
+        <li><b>"What's the gap between print and the other three divisions?"</b> &mdash; opens the unification priority.</li>
+        <li><b>"What happens when a rep needs to know if the customer paid?"</b> &mdash; surfaces the chatter-billing problem.</li>
+        <li><b>"What do you wish worked differently today, regardless of RCA?"</b> &mdash; gives you the customer's <em>actual</em> wishlist.</li>
+      </ul>
+    </div>
+
+    <div class="output"><b>Whiteboard output:</b> a single end-to-end diagram showing Opportunity, Quote, Print Estimator, Job__c, Job_Item__c, Invoice__c, Avalara, Microsoft Business Central, Authorize.net, customer-portal APIs, and the manufacturing floor. Mark in <em>red</em> any place where the current process breaks for the non-print divisions.</div>
+
+    <div class="watchout"><b>Watch-out:</b> the temptation will be to start solving as they describe problems. <em>Don't.</em> Just listen and capture. Solutioning happens in segment 3.</div>
+
+    <div class="lifeline"><b>Lifeline:</b> if Anthony goes deep into a custom Apex class detail you don't follow, say <em>"Can you show that to me on a screen at the break? I want to make sure I get it right on the wall."</em> &mdash; this signals genuine interest without faking expertise.</div>
+  </div>
+
+  <h2 id="mapping">6. Segment 3 &mdash; Map to RCA, Pillar by Pillar <span style="font-size: 13px; color: var(--sf-grey-700); font-weight: normal;">(60 min)</span></h2>
+
+  <div class="segment">
+    <div class="segment-header">
+      <h3>Six pillars, ~10 minutes each</h3>
+      <div class="segment-meta">
+        <span class="chip time">60 min</span>
+        <span class="chip driver team">You facilitate, Vandeep narrates RCA</span>
+      </div>
+    </div>
+    <div class="goal"><b>Goal:</b> walk through each pillar of Britten's world and show the RCA equivalent. Get explicit "this works for us" or "this concerns us" for each.</div>
+
+    <h4>How to run each pillar (10-minute pattern)</h4>
+    <ol style="font-size: 14px;">
+      <li><b>You frame it</b> (1 min): "Pillar 3 is product attributes. Today you have free-text fields on the Estimator UI."</li>
+      <li><b>Vandeep narrates the RCA equivalent</b> (3 min): with a real screenshot or short demo where possible.</li>
+      <li><b>You ask the customer</b>: <em>"Does that map to how you think about it?"</em> (1 min)</li>
+      <li><b>Open discussion</b> (4 min): capture concerns, questions, "how would this work for X" scenarios.</li>
+      <li><b>You summarize</b> (1 min): write the verdict on the wall &mdash; <span style="color: var(--easy);">&#10003; works</span>, <span style="color: var(--med);">? need to dig</span>, or <span style="color: var(--large);">&#10006; concern</span>.</li>
+    </ol>
+
+    <h4>The six pillars to walk through</h4>
+    <table>
+      <thead><tr><th>#</th><th>Pillar</th><th>Britten Today</th><th>RCA Equivalent <span style="font-weight: normal; font-size: 11px;">(Vandeep narrates)</span></th><th>The Question to Ask</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><b>Product Catalog</b></td>
+          <td>No real catalog. Banner specs typed onto quotes.</td>
+          <td>EPC with attribute-based products. Drag-and-drop bundle builder.</td>
+          <td>"How do you imagine BoxPop&reg; being modeled here?"</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><b>Pricing Logic</b></td>
+          <td>Apex Print Estimator with cost-plus bell curve.</td>
+          <td>Pricing Procedures + Constraint Builder. Custom Apex actions for the bespoke math.</td>
+          <td>"Show me your most complex pricing rule. Can we model that here?"</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><b>Quote Building</b></td>
+          <td>Custom Visualforce page on the quote.</td>
+          <td>RCA Configurator + Quote Line Editor (Lightning).</td>
+          <td>"What would your most experienced rep miss most about today's screen?"</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><b>Order &amp; Fulfillment</b></td>
+          <td>Custom Job__c, Job_Item__c, junction objects for split shipments.</td>
+          <td>RCA Order with native decomposition into fulfillment line items.</td>
+          <td>"The 100-art-files-as-one-line case &mdash; how would that look in RCA?"</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td><b>Invoicing &amp; Tax</b></td>
+          <td>Custom Invoice__c, Avalara, feed to Microsoft Business Central.</td>
+          <td>RCA Invoice (Salesforce-side) + same Avalara &amp; BC integrations.</td>
+          <td>"Walk us through one invoice from start to BC &mdash; what changes?"</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td><b>Reporting, AI, Forecasting</b></td>
+          <td>Pipeline Inspector blocked. 3,400 undocumented fields.</td>
+          <td>Standard RCA objects + RCA Intelligence dashboards. Pipeline Inspector unblocked.</td>
+          <td>"What's the first dashboard you'd build the day this turns on?"</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="output"><b>Whiteboard output:</b> a two-column "Today / RCA" map with a verdict marker (&#10003;, ?, &#10006;) next to each pillar. This is the artifact you photograph and send to everyone afterward.</div>
+
+    <div class="lifeline"><b>Lifeline:</b> if Vandeep can't be present, you can still run this. For each RCA pillar, say <em>"Vandeep can show this in detail in our follow-up. For now I want to confirm whether the concept maps to how you think about it."</em> &mdash; defer the depth, lock in the concept.</div>
+  </div>
+
+  <h2 id="hard">7. Segment 4 &mdash; The Hard Questions <span style="font-size: 13px; color: var(--sf-grey-700); font-weight: normal;">(30 min)</span></h2>
+
+  <div class="segment">
+    <div class="segment-header">
+      <h3>Where Britten needs proof, not promises</h3>
+      <div class="segment-meta">
+        <span class="chip time">30 min</span>
+        <span class="chip driver team">Partner + Vandeep</span>
+      </div>
+    </div>
+    <div class="goal"><b>Goal:</b> address the three things the partner briefing note explicitly called out as deal-makers. Get the partner on the floor for this segment.</div>
+
+    <h4>Hard Question 1 &mdash; Constraint Builder for Cost-Plus Pricing <span style="font-size: 12px; font-weight: normal; color: var(--med);">(10 min)</span></h4>
+    <p style="font-size: 14px;">Per the partner briefing note, this is non-negotiable. Britten needs to <em>see</em> Constraint Builder handle a cost-plus bell curve without custom code.</p>
+    <div class="script">
+      Anthony, the partner is going to walk through how Constraint Builder handles your cost-plus model. Pick the gnarliest rule you can think of from the Estimator. We'll try to model it live.
+    </div>
+
+    <h4>Hard Question 2 &mdash; Data Migration from Custom to Standard <span style="font-size: 12px; font-weight: normal; color: var(--med);">(10 min)</span></h4>
+    <p style="font-size: 14px;">Job__c, Job_Item__c (~450 fields), Invoice__c, junction objects. The partner needs to show a credible migration approach.</p>
+    <div class="questions">
+      <h5>Push hard on these</h5>
+      <ul>
+        <li><b>What's your sequencing?</b> Which custom object goes first, which last?</li>
+        <li><b>How do we keep manufacturing operating during the cutover?</b></li>
+        <li><b>How do we handle in-flight jobs that exist on the day of cutover?</b></li>
+        <li><b>What's the rollback if we discover a parity break post-go-live?</b></li>
+      </ul>
+    </div>
+
+    <h4>Hard Question 3 &mdash; Pricing Parity Approach <span style="font-size: 12px; font-weight: normal; color: var(--med);">(10 min)</span></h4>
+    <p style="font-size: 14px;">Banner pricing has been tuned over a decade. Mismatches at go-live = revenue and margin issues immediately visible to finance.</p>
+    <div class="questions">
+      <h5>Lock in the parity approach</h5>
+      <ul>
+        <li><b>How many historical quotes will we replay?</b> (target: 12+ months)</li>
+        <li><b>What's the acceptable variance threshold?</b> (target: zero, then exception list)</li>
+        <li><b>Who signs off on parity?</b> Anthony? Sales leadership? Finance?</li>
+      </ul>
+    </div>
+
+    <div class="watchout"><b>Watch-out:</b> if the partner can't answer one of these convincingly, <em>that's data</em>. Don't paper over it. Park it for follow-up. Britten will trust you more for naming the gap than for hiding it.</div>
+  </div>
+
+  <h2 id="risks">8. Segment 5 &mdash; Risks &amp; Open Items <span style="font-size: 13px; color: var(--sf-grey-700); font-weight: normal;">(15 min)</span></h2>
+
+  <div class="segment">
+    <div class="segment-header">
+      <h3>Surface what worries them</h3>
+      <div class="segment-meta">
+        <span class="chip time">15 min</span>
+        <span class="chip driver you">You drive</span>
+      </div>
+    </div>
+    <div class="goal"><b>Goal:</b> get the unspoken concerns on the wall. Park what we can't answer today.</div>
+
+    <div class="script">
+      We've covered a lot of ground. Before we close, I want to give Anthony and Colin five minutes to flag anything that's still nagging at them &mdash; the things that would keep you up at night about doing this. Big or small.
+    </div>
+
+    <div class="questions">
+      <h5>Direct prompts if the room goes quiet</h5>
+      <ul>
+        <li><b>What's the part of this you trust the least?</b></li>
+        <li><b>If we did this and one thing failed, what would you guess that one thing would be?</b></li>
+        <li><b>What would your reps say if we showed them the new screen tomorrow?</b></li>
+        <li><b>What's the thing you'd want to test before you'd commit to a go-live date?</b></li>
+        <li><b>Is there anyone we haven't talked to whose buy-in we'd need?</b></li>
+      </ul>
+    </div>
+
+    <div class="output"><b>Output:</b> a "parking lot" list on the wall, each item with an owner and a date by which we'll come back with an answer.</div>
+  </div>
+
+  <h2 id="close">9. Segment 6 &mdash; Close &amp; Commitments <span style="font-size: 13px; color: var(--sf-grey-700); font-weight: normal;">(5 min)</span></h2>
+
+  <div class="segment">
+    <div class="segment-header">
+      <h3>Three concrete next steps</h3>
+      <div class="segment-meta">
+        <span class="chip time">5 min</span>
+        <span class="chip driver you">You drive</span>
+      </div>
+    </div>
+    <div class="goal"><b>Goal:</b> end with named owners, named dates, and a calendar invite that goes out today.</div>
+
+    <h4>The closing pattern</h4>
+    <ol style="font-size: 14px;">
+      <li><b>Photograph the whiteboard.</b> Right now, in the room.</li>
+      <li><b>Read back the parking lot.</b> Each item, owner, date.</li>
+      <li><b>Name three next steps.</b> Examples below.</li>
+      <li><b>Confirm the next meeting on the spot.</b> Don't leave without a date on a calendar.</li>
+      <li><b>Thank Anthony and Colin specifically.</b> They've been generous with time. Acknowledge it.</li>
+    </ol>
+
+    <h4>Default next steps to propose</h4>
+    <table>
+      <thead><tr><th>#</th><th>Next Step</th><th>Owner</th><th>Date</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Send workshop summary + photographed whiteboard + open questions</td><td>You</td><td>Within 48 hours</td></tr>
+        <tr><td>2</td><td>Partner returns with detailed data-migration plan and Constraint Builder PoV against a real Britten pricing rule</td><td>Partner</td><td>2 weeks</td></tr>
+        <tr><td>3</td><td>Schedule follow-up: deeper dive on Order &amp; Decomposition with manufacturing leadership in the room</td><td>Lily / You</td><td>3 weeks</td></tr>
+      </tbody>
+    </table>
+
+    <div class="script">
+      I want to thank Anthony and Colin for the time today. You've shared a lot of detail and pushed back where you needed to &mdash; that's exactly what we needed. Here's what we'll do next: I'll send the summary and the wall photos within 48 hours. The partner will come back in two weeks with their data-migration plan and a working Constraint Builder example against a real Britten rule. And we'll schedule a deeper session on Order and Decomposition in three weeks. Sound right?
+    </div>
+  </div>
+
+  <h2 id="cheat">10. RCA Cheatsheet (Britten Terms &harr; RCA Terms)</h2>
+  <p style="font-size: 14px; color: var(--sf-grey-700);">Use Britten's terms first, then bridge. This table is your pocket reference.</p>
+
+  <div class="cheat-grid">
+    <div class="cheat"><b>Print Estimator</b>Britten's custom Apex pricing tool. Calculates banner cost = f(substrate, dimensions, labor, waste).<span class="their">RCA equivalent: Pricing Procedure + Constraint Builder (with optional Apex actions for bespoke math).</span></div>
+    <div class="cheat"><b>Job__c / Job_Item__c</b>Custom objects mirroring Order / Order Line. ~450 fields on Job_Item__c.<span class="their">RCA equivalent: standard Order + Order Line Item, with native decomposition.</span></div>
+    <div class="cheat"><b>Invoice__c / Invoice_Line_Item__c</b>Custom invoicing objects. Junction objects handle split shipments.<span class="their">RCA equivalent: standard RCA Invoice. Junction logic absorbed by decomposition.</span></div>
+    <div class="cheat"><b>Cost-plus bell curve</b>Britten's pricing model: cost + margin band, with rep discretion.<span class="their">RCA equivalent: handled in Pricing Procedure; Constraint Builder provides the margin guardrails.</span></div>
+    <div class="cheat"><b>"Everything is custom"</b>Britten's mindset: don't maintain SKUs, maintain attributes.<span class="their">RCA equivalent: attribute-based EPC catalog &mdash; this is RCA's strongest fit for Britten.</span></div>
+    <div class="cheat"><b>Decomposition</b>Britten's term: one quote line &rarr; many fulfillment activities. Today managed via junction objects.<span class="their">RCA equivalent: native Order decomposition &mdash; commercial line items map to fulfillment line items declaratively.</span></div>
+    <div class="cheat"><b>Microsoft Business Central</b>Britten's financial system. Owns collections, payments, doc generation.<span class="their">Stays put. RCA Invoice feeds BC; BC continues as financial system of record.</span></div>
+    <div class="cheat"><b>Pipeline Inspector / Forecasting</b>Blocked today due to custom data model.<span class="their">Unblocked once Opportunity / Order / Quote run on standard RCA objects.</span></div>
+    <div class="cheat"><b>Agent Force / Einstein</b>Blocked today &mdash; 3,400 undocumented fields.<span class="their">Functional on the migrated layer. Standard objects come with metadata baked in.</span></div>
+    <div class="cheat"><b>"Two-man IT shop"</b>Anthony and Colin. Hesitant to take on more dev work.<span class="their">RCA's "clicks-not-code" framing should be your default register all day.</span></div>
+  </div>
+
+  <h2 id="tactics">11. Confidence Tactics for Moments You Don't Know</h2>
+
+  <div class="tactic-grid">
+
+    <div class="tactic">
+      <h4>1. Defer with grace, not apology</h4>
+      <p>Don't say "I don't know that." Say:</p>
+      <p class="quote">"That's a great question for Vandeep &mdash; let's pull him in for two minutes." or "I want to give you a precise answer rather than a guess. Let me come back with that by Friday."</p>
+    </div>
+
+    <div class="tactic">
+      <h4>2. Reflect their question before answering</h4>
+      <p>Buys you 15 seconds, ensures you actually heard it, and often the customer answers their own question:</p>
+      <p class="quote">"So what you're really asking is whether RCA can model the cost-plus rule when there's no published list price &mdash; is that right?"</p>
+    </div>
+
+    <div class="tactic">
+      <h4>3. Use Britten's own examples</h4>
+      <p>If you don't know how RCA handles something abstract, ask them for a concrete example first &mdash; then model that one example with Vandeep:</p>
+      <p class="quote">"Walk me through one specific banner job with all its options. We'll map that one end-to-end and see what we learn."</p>
+    </div>
+
+    <div class="tactic">
+      <h4>4. Anchor in your 10 years of Salesforce</h4>
+      <p>You may be new to RCA, but you know the platform. Bring it up:</p>
+      <p class="quote">"In 10+ years on Salesforce I've seen plenty of orgs that look like yours &mdash; and the pattern of moving from custom objects to standard ones is well-trodden. The RCA-specific moves I'll lean on Vandeep for, but the migration shape I've done before."</p>
+    </div>
+
+    <div class="tactic">
+      <h4>5. Make the unknown a shared exercise</h4>
+      <p>Some questions you genuinely can't answer in the room. Make discovering the answer part of the engagement:</p>
+      <p class="quote">"Honestly, I don't think any of us in the room can answer that without testing it. Let's add it to the parking lot and the partner will demo it back to us in two weeks."</p>
+    </div>
+
+    <div class="tactic">
+      <h4>6. Lean on Britten's built confidence</h4>
+      <p>Anthony built a custom version of Revenue Cloud. He understands the problem space deeply. Surface that:</p>
+      <p class="quote">"Anthony, you've essentially built RCA by hand. You know better than most architects how this should hang together. Where do you think the seams are most fragile?"</p>
+    </div>
+
+    <div class="tactic">
+      <h4>7. Use silence</h4>
+      <p>If you ask a question and nobody answers, <strong>do not fill the gap</strong>. Wait. Five seconds feels like five minutes, but the answer that comes after silence is usually the most honest one.</p>
+    </div>
+
+    <div class="tactic">
+      <h4>8. Capture, don't argue</h4>
+      <p>If Anthony pushes back on something Vandeep says, your job is <em>not</em> to defend Vandeep. Your job is to capture the concern accurately on the wall.</p>
+      <p class="quote">"Got it &mdash; let me make sure I'm hearing that right. Your concern is X. Anthony, did I get that?"</p>
+    </div>
+
+  </div>
+
+  <h2 id="kit">12. Facilitator Kit (What to Print &amp; Bring)</h2>
+
+  <div class="checklist">
+    <ul>
+      <li><span class="box"></span><div><b>This guide, printed.</b> Sections 4&ndash;9 (the segment cards) on one or two pages each.</div></li>
+      <li><span class="box"></span><div><b>The assessment HTML, printed.</b> Especially the "Priorities &amp; Challenges" section and the side-by-side comparison.</div></li>
+      <li><span class="box"></span><div><b>One sheet of A4 with the cheatsheet (Section 10).</b> Folded in your pocket for quick lookups.</div></li>
+      <li><span class="box"></span><div><b>The pre-read you sent them.</b> So you and they are looking at the same artifact.</div></li>
+      <li><span class="box"></span><div><b>Whiteboard markers in 3 colors.</b> Black for current state, blue for RCA target, red for concerns / parking lot.</div></li>
+      <li><span class="box"></span><div><b>Sticky notes (two colors).</b> One color for "concerns", one for "wins". Hand to Anthony and Colin during segment 5.</div></li>
+      <li><span class="box"></span><div><b>Phone with full battery.</b> For photographing the whiteboard at the end.</div></li>
+      <li><span class="box"></span><div><b>Vandeep's phone number.</b> If he's remote, dial him in for the hard questions even if not in the original plan.</div></li>
+      <li><span class="box"></span><div><b>Calendar open.</b> When you propose the follow-up, send the invite from the room.</div></li>
+    </ul>
+  </div>
+
+  <p class="lede" style="margin-top: 28px;">
+    <b>One last reminder.</b> The customer chose to be in the room. They want this to work as much as you do. Anthony and Colin have already built a custom version of RCA &mdash; they're not skeptics, they're connoisseurs. Treat them as expert peers and the workshop will run itself. Your job is to keep the room oriented, surface the right questions, and leave with three concrete commitments. You've got this.
+  </p>
+
+</main>
+
+<footer>
+  Britten RCA Mapping Workshop &middot; Facilitator's Guide &middot; Prepared by Salesforce Technical Architecture
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Britten &mdash; RCA Mapping Workshop (Lucid edition)</title>
+<style>
+  :root {
+    --sf-navy: #032D60;
+    --sf-blue: #0176D3;
+    --sf-blue-light: #E5F1FB;
+    --sf-grey-100: #F3F3F3;
+    --sf-grey-300: #C9C9C9;
+    --sf-grey-700: #444;
+    --pain: #C62828;
+    --pain-bg: #FFEBEE;
+    --gain: #2E7D32;
+    --gain-bg: #E8F5E9;
+    --insight: #E65100;
+    --insight-bg: #FFF3E0;
+    --lucid: #F5A623;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Salesforce Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0; padding: 0;
+    background: #FAFAFA;
+    color: #181818;
+    line-height: 1.55;
+  }
+
+  .slide {
+    min-height: 100vh;
+    padding: 60px 80px;
+    border-bottom: 1px solid var(--sf-grey-300);
+    background: white;
+    page-break-after: always;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .slide.cover {
+    background: linear-gradient(135deg, var(--sf-navy) 0%, var(--sf-blue) 100%);
+    color: white;
+    text-align: center;
+  }
+  .slide.cover h1 { font-size: 52px; margin: 0 0 18px; font-weight: 700; line-height: 1.15; }
+  .slide.cover .sub { font-size: 22px; opacity: 0.9; margin-bottom: 12px; }
+  .slide.cover .meta { font-size: 14px; opacity: 0.8; letter-spacing: 1px; text-transform: uppercase; margin-top: 32px; }
+
+  .slide h2 {
+    color: var(--sf-navy);
+    font-size: 36px;
+    margin: 0 0 8px;
+    line-height: 1.2;
+  }
+  .slide .eyebrow {
+    color: var(--sf-blue);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .slide .lede {
+    font-size: 18px;
+    color: var(--sf-grey-700);
+    margin: 6px 0 30px;
+    max-width: 1000px;
+  }
+
+  /* Lucid embed card */
+  .lucid-card {
+    background: linear-gradient(135deg, #FFF8E7 0%, #FFFFFF 100%);
+    border: 2px solid var(--lucid);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin: 16px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    box-shadow: 0 2px 8px rgba(245,166,35,0.15);
+  }
+  .lucid-card.compact {
+    padding: 18px 22px;
+    margin: 12px 0;
+  }
+  .lucid-card .lucid-info {
+    flex: 1;
+  }
+  .lucid-card .lucid-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--lucid);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+  }
+  .lucid-card .lucid-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--sf-navy);
+    margin-bottom: 4px;
+  }
+  .lucid-card .lucid-subtitle {
+    font-size: 13px;
+    color: var(--sf-grey-700);
+  }
+  .lucid-card .lucid-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: var(--lucid);
+    color: white;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+  .lucid-card .lucid-btn:hover {
+    background: #E0941F;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(245,166,35,0.4);
+  }
+  .lucid-card .lucid-btn::after {
+    content: "→";
+    font-size: 16px;
+  }
+
+  .talk {
+    background: var(--sf-blue-light);
+    border-left: 4px solid var(--sf-blue);
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin: 18px 0;
+    font-size: 15px;
+    font-style: italic;
+    color: #1a3a5c;
+  }
+  .talk::before {
+    content: "Say while sharing this slide:";
+    display: block;
+    font-style: normal;
+    font-size: 11px;
+    color: var(--sf-blue);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .prompts {
+    background: var(--insight-bg);
+    border-left: 4px solid var(--insight);
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin: 18px 0;
+    font-size: 14.5px;
+  }
+  .prompts h4 {
+    margin: 0 0 8px;
+    font-size: 12px;
+    color: var(--insight);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+  .prompts ul { margin: 0; padding-left: 20px; }
+  .prompts li { margin: 4px 0; }
+
+  .pain-card, .gain-card {
+    border-radius: 10px;
+    padding: 18px 22px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    min-height: 130px;
+  }
+  .pain-card { background: var(--pain-bg); border-left: 5px solid var(--pain); }
+  .gain-card { background: var(--gain-bg); border-left: 5px solid var(--gain); }
+  .pain-card .label, .gain-card .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .pain-card .label { color: var(--pain); }
+  .gain-card .label { color: var(--gain); }
+  .pain-card h3, .gain-card h3 { margin: 0 0 6px; font-size: 17px; color: var(--sf-navy); }
+  .pain-card p, .gain-card p { margin: 0; font-size: 13.5px; }
+
+  .quote {
+    background: white;
+    border: 2px solid var(--pain);
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin: 16px 0;
+    font-style: italic;
+    color: #2A2A2A;
+    position: relative;
+    font-size: 15px;
+  }
+  .quote::before {
+    content: "\201C";
+    font-size: 60px;
+    color: var(--pain);
+    position: absolute;
+    top: -10px;
+    left: 12px;
+    font-family: Georgia, serif;
+    line-height: 1;
+  }
+  .quote .who {
+    display: block;
+    font-style: normal;
+    font-size: 12px;
+    color: var(--sf-grey-700);
+    margin-top: 8px;
+    font-weight: 600;
+  }
+
+  .arch-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 18px 0;
+  }
+  .arch-side {
+    background: white;
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  }
+  .arch-side.before { border-top: 4px solid var(--pain); }
+  .arch-side.after { border-top: 4px solid var(--gain); }
+  .arch-side h3 {
+    margin: 0 0 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .arch-side.before h3 { color: var(--pain); }
+  .arch-side.after h3 { color: var(--gain); }
+
+  .pill {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 14px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-right: 6px;
+  }
+  .pill.pain { background: var(--pain-bg); color: var(--pain); border: 1px solid var(--pain); }
+  .pill.gain { background: var(--gain-bg); color: var(--gain); border: 1px solid var(--gain); }
+  .pill.insight { background: var(--insight-bg); color: var(--insight); border: 1px solid var(--insight); }
+
+  @media print {
+    body { background: white; }
+    .slide { min-height: auto; padding: 40px 60px; page-break-after: always; }
+    .slide.cover { background: var(--sf-navy) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .talk, .prompts, .pain-card, .gain-card, .lucid-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============== SLIDE 1: COVER ============== -->
+<section class="slide cover">
+  <div class="eyebrow" style="color: white; opacity: 0.8;">Virtual Workshop &middot; Mapping Today to Tomorrow</div>
+  <h1>From "Bodies Buried"<br/>to Clicks-Not-Code</h1>
+  <div class="sub">Britten's path from custom Apex to Revenue Cloud Advanced</div>
+  <div class="meta">Salesforce &middot; Britten Media &middot; Anthony &middot; Colin</div>
+
+  <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 14px 20px; margin-top: 36px; max-width: 760px; margin-left: auto; margin-right: auto; text-align: left; font-size: 13px; line-height: 1.7;">
+    <b style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.85;">Facilitator note &mdash; not visible to audience when presenting</b><br/>
+    All diagrams in this deck live in a single <b>Lucidchart document</b> &mdash; one diagram per Lucid page. Each slide has an <b>Open in Lucid</b> button that takes you to the right page. Edit freely; the link is share-edit so collaborators can change shapes, labels, and arrows directly.
+  </div>
+
+  <div style="margin-top: 24px;">
+    <a href="https://lucid.app/lucidchart/8cada37e-3e31-43a5-8662-840e0f8aad24/edit?invitationId=inv_0c1602a9-4b73-490f-92b7-e401339269f6" target="_blank" rel="noopener" style="display: inline-block; padding: 14px 32px; background: white; color: var(--sf-navy); border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 15px;">
+      Open Lucid document &rarr;
+    </a>
+  </div>
+</section>
+
+<!-- ============== SLIDE 2: WHAT YOU TOLD US ============== -->
+<section class="slide">
+  <div class="eyebrow">Where we start</div>
+  <h2>What you told us</h2>
+  <p class="lede">Five themes from our discovery conversations &mdash; in your words, not ours. Today's job is to map each one to a concrete RCA answer.</p>
+
+  <div class="quote">
+    A previous Salesforce architect refused to touch our org &mdash; "not with a 10-foot pole."
+    <span class="who">&mdash; Anthony, on the 2014-era technical debt</span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 24px 0;">
+
+    <div class="pain-card" style="min-height: auto;">
+      <div class="label">Pain 1</div>
+      <h3 style="font-size: 15px;">Legacy Tech Debt</h3>
+      <p style="font-size: 12px;">Org built 2014&ndash;2016. Heavy Apex, Visualforce, workflow rules, process builders. New Salesforce features can't be adopted.</p>
+      <p style="font-size: 11px; color: var(--sf-grey-700); margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(198,40,40,0.2);"><b>Cost:</b> every release passes Britten by.</p>
+    </div>
+
+    <div class="pain-card" style="min-height: auto;">
+      <div class="label">Pain 2</div>
+      <h3 style="font-size: 15px;">Scaling Pricing</h3>
+      <p style="font-size: 12px;">Only Print has the Apex Estimator. Foam3D&trade;, BoxPop&reg;, Woodworking run on "sophisticated spreadsheets" with no path into Salesforce.</p>
+      <p style="font-size: 11px; color: var(--sf-grey-700); margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(198,40,40,0.2);"><b>Cost:</b> 3 of 4 divisions can't scale on the platform.</p>
+    </div>
+
+    <div class="pain-card" style="min-height: auto;">
+      <div class="label">Pain 3</div>
+      <h3 style="font-size: 15px;">Inflexible Catalog</h3>
+      <p style="font-size: 12px;">Adding new capabilities (e.g. fabric printing) is "clunky" and "a bear to update." Each change is a multi-week dev cycle.</p>
+      <p style="font-size: 11px; color: var(--sf-grey-700); margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(198,40,40,0.2);"><b>Cost:</b> growth is gated by IT capacity.</p>
+    </div>
+
+    <div class="pain-card" style="min-height: auto;">
+      <div class="label">Pain 4</div>
+      <h3 style="font-size: 15px;">Two-Person Team</h3>
+      <p style="font-size: 12px;">Anthony &amp; Colin maintain the entire org. Explicit preference for "admin-friendly" config. Past partner experience was scrapped.</p>
+      <p style="font-size: 11px; color: var(--sf-grey-700); margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(198,40,40,0.2);"><b>Cost:</b> all change requests funnel through 1.5 FTE.</p>
+    </div>
+
+    <div class="pain-card" style="min-height: auto;">
+      <div class="label">Pain 5</div>
+      <h3 style="font-size: 15px;">Decomposition</h3>
+      <p style="font-size: 12px;">One quote line = 100 art files or multi-state shipments. Today managed via custom junction objects sitting between Job_Item__c and Invoice.</p>
+      <p style="font-size: 11px; color: var(--sf-grey-700); margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(198,40,40,0.2);"><b>Cost:</b> brittle glue layer that breaks on edge cases.</p>
+    </div>
+
+  </div>
+
+  <div class="talk">
+    Before we go anywhere near RCA today, I want to read back what we heard from you. Five themes, all in your words. If any of these are wrong or have shifted since we last talked, please stop me. The whole point of today is to make sure we're solving the actual problem &mdash; not the one we imagined.
+  </div>
+</section>
+
+<!-- ============== SLIDE 3: WHERE THE PAIN LIVES IN YOUR ARCHITECTURE ============== -->
+<section class="slide">
+  <div class="eyebrow">The big picture</div>
+  <h2>Where each pain lives in your architecture</h2>
+  <p class="lede">This is your current architecture as we understand it. The five pain points aren't abstract &mdash; they live at specific places in this diagram. We'll walk through each one in the next slides.</p>
+
+  <div class="lucid-card">
+    <div class="lucid-info">
+      <div class="lucid-label">Lucid &middot; Page 1</div>
+      <div class="lucid-title">Architecture Overview</div>
+      <div class="lucid-subtitle">Web/chat/portal &rarr; CRM &rarr; quoting &rarr; Frankenstein RCA &rarr; manufacturing floor &rarr; external systems. Edit shapes, arrows, labels directly in Lucid.</div>
+    </div>
+    <a class="lucid-btn" href="https://lucid.app/lucidchart/8cada37e-3e31-43a5-8662-840e0f8aad24/edit?invitationId=inv_0c1602a9-4b73-490f-92b7-e401339269f6&page=p1" target="_blank" rel="noopener">Open in Lucid</a>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 8px 0 0;">
+    <div style="background: var(--pain-bg); border-left: 3px solid var(--pain); padding: 6px 9px; border-radius: 4px; font-size: 11px;"><b style="color: var(--pain);">P1</b> Legacy Apex/VF (Print Estimator)</div>
+    <div style="background: var(--pain-bg); border-left: 3px solid var(--pain); padding: 6px 9px; border-radius: 4px; font-size: 11px;"><b style="color: var(--pain);">P2</b> 3 divisions on spreadsheets</div>
+    <div style="background: var(--pain-bg); border-left: 3px solid var(--pain); padding: 6px 9px; border-radius: 4px; font-size: 11px;"><b style="color: var(--pain);">P3</b> New products = code change</div>
+    <div style="background: var(--pain-bg); border-left: 3px solid var(--pain); padding: 6px 9px; border-radius: 4px; font-size: 11px;"><b style="color: var(--pain);">P4</b> All maintenance &rarr; 2 people</div>
+    <div style="background: var(--pain-bg); border-left: 3px solid var(--pain); padding: 6px 9px; border-radius: 4px; font-size: 11px;"><b style="color: var(--pain);">P5</b> Junction-object decomposition</div>
+  </div>
+
+  <div class="talk">
+    This is the whole picture as we understand it. From left to right: leads come in from web forms, live chat, and customer-portal APIs &mdash; all hitting standard Salesforce. The middle is where it gets interesting. Your quoting layer is part standard, part custom &mdash; the Print Estimator does the pricing, SD Docs generates PDFs. On Closed-Won, an Apex trigger creates Job__c, then QuoteLineItems get copied into Job_Item__c. The junction objects sit between Job_Item__c and Invoice for split shipments. The manufacturing floor reads from Job_Item__c. On the right, your external systems &mdash; Avalara, Business Central, Authorize.net, Oslink to FedEx/UPS, the partner org via Salesforce-to-Salesforce &mdash; all of those stay exactly where they are. Each red pain marker (P1-P5) sits where the pain actually lives. <em>Anthony, Colin &mdash; if any of these arrows or boxes are wrong, please correct us now. The whole rest of this conversation depends on us getting this right.</em>
+  </div>
+
+  <div class="prompts">
+    <h4>Discussion prompts</h4>
+    <ul>
+      <li>Did we draw your architecture correctly? Wrong arrows, missing systems, mislabeled objects?</li>
+      <li>Is there a custom piece on this diagram that's <em>not</em> painful &mdash; that we should be careful about touching?</li>
+      <li>Of the five pains, which one would removing make the biggest difference for you tomorrow?</li>
+      <li>Is the partner-org S2S connection still active and important to preserve?</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============== SLIDE 4: PAIN 1 — LEGACY TECH DEBT ============== -->
+<section class="slide">
+  <div class="eyebrow">Pain 1 of 5</div>
+  <h2>Legacy Technical Debt</h2>
+
+  <div class="quote">
+    Heavily reliant on legacy Apex and Visualforce. The previous architect refused to touch the org &mdash; though we've cleaned it up significantly since.
+    <span class="who">&mdash; Discovery doc, summarized</span>
+  </div>
+
+  <div class="arch-compare">
+    <div class="arch-side before">
+      <h3>Today &mdash; Custom Objects</h3>
+      <div class="lucid-card compact">
+        <div class="lucid-info">
+          <div class="lucid-label">Lucid &middot; Page 2</div>
+          <div class="lucid-title">Pain 1 Today</div>
+        </div>
+        <a class="lucid-btn" href="https://lucid.app/lucidchart/8cada37e-3e31-43a5-8662-840e0f8aad24/edit?invitationId=inv_0c1602a9-4b73-490f-92b7-e401339269f6&page=p2" target="_blank" rel="noopener">Open</a>
+      </div>
+    </div>
+    <div class="arch-side after">
+      <h3>Tomorrow &mdash; Standard RCA Objects</h3>
+      <div class="lucid-card compact">
+        <div class="lucid-info">
+          <div class="lucid-label">Lucid &middot; Page 3</div>
+          <div class="lucid-title">Pain 1 Tomorrow</div>
+        </div>
+        <a class="lucid-btn" href="https://lucid.app/lucidchart/8cada37e-3e31-43a5-8662-840e0f8aad24/edit?invitationId=inv_0c1602a9-4b73-490f-92b7-e401339269f6&page=p3" target="_blank" rel="noopener">Open</a>
+      </div>
+    </div>
+  </div>
+
+  <div style="background: var(--insight-bg); border-left: 3px solid var(--insight); padding: 10px 14px; border-radius: 4px; margin: 12px 0; font-size: 13px;">
+    <b style="color: var(--insight);">Note on the trigger:</b> the Closed-Won trigger is on the <b>Opportunity</b>, not the QuoteLineItem. It creates the Job__c record; QuoteLineItems are copied into Job_Item__c. Anthony &mdash; please correct anything we got wrong.
+  </div>
+
+  <div class="talk">
+    On the left is what we mapped together based on what you've described &mdash; the custom Print Estimator, Job__c, Job_Item__c with 450 fields, custom Invoice, junction objects for split shipments. Each red box is something only your team can maintain. On the right is the RCA equivalent. The shape of the business stays the same. Microsoft Business Central and Avalara stay exactly where they are. But everything in green is now a standard Salesforce object &mdash; which means it's documented, it gets new features automatically, and AI can reason over it.
+  </div>
+
+  <div class="prompts">
+    <h4>Questions to ask Anthony &amp; Colin</h4>
+    <ul>
+      <li>Did we capture the current state correctly? What's missing on the left side?</li>
+      <li>Which red box would you most like to retire first if you could pick only one?</li>
+      <li>Is there a custom object on the left we'd be sad to lose because it does something the standard objects can't?</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============== SLIDE 5: PAIN 2 — SCALING PRICING ============== -->
+<section class="slide">
+  <div class="eyebrow">Pain 2 of 5</div>
+  <h2>Scaling Pricing Across Divisions</h2>
+
+  <div class="quote">
+    Newer divisions like Foam and Woodworking use sophisticated spreadsheets. We lack the resources to build them into the current Apex framework.
+    <span class="who">&mdash; Discovery doc</span>
+  </div>
+
+  <div class="arch-compare">
+    <div class="arch-side before">
+      <h3>Today &mdash; One engine for one division</h3>
+      <div class="lucid-card compact">
+        <div class="lucid-info">
+          <div class="lucid-label">Lucid &middot; Page 4</div>
+          <div class="lucid-title">Pain 2 Today</div>
+        </div>
+        <a class="lucid-btn" href="https://lucid.app/lucidchart/8cada37e-3e31-43a5-8662-840e0f8aad24/edit?invitationId=inv_0c1602a9-4b73-490f-92b7-e401339269f6&page=p4" target="_blank" rel="noopener">Open</a>
+      </div>
+    </div>
+    <div class="arch-side after">
+      <h3>Tomorrow &mdash; One framework, all divisions</h3>
+      <div class="lucid-card compact">
+        <div class="lucid-info">
+          <div class="lucid-label">Lucid &middot; Page 5</div>
+          <div class="lucid-title">Pain 2 Tomorrow</div>
+        </div>
+        <a class="lucid-btn" href="https://lucid.app/lucidchart/8cada37e-3e31-43a5-8662-840e0f8aad24/edit?invitationId=inv_0c1602a9-4b73-490f-92b7-e401339269f6&page=p5" target="_blank" rel="noopener">Open</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="talk">
+    Today, pricing capability follows division. Print got the Apex Estimator; the others got spreadsheets &mdash; and there's no path forward without a developer. RCA inverts that. The framework stays consistent across all four divisions, but each division defines its own attribute set. So the Foam division gets the same admin-friendly pricing engine as Print, just with foam-specific attributes plugged in. You stop maintaining four pricing systems and start maintaining one.
+  </div>
+
+  <div class="prompts">
+    <h4>Discussion prompts</h4>
+    <ul>
+      <li>Which division would you pilot the new model with after Print &mdash; Foam, BoxPop, or Woodworking?</li>
+      <li>What's blocking you from putting the spreadsheet logic into Salesforce today, beyond resources?</li>
+      <li>Does each division own its own attribute taxonomy, or do you want common attributes shared across?</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============== SLIDE 6: PAIN 3 — INFLEXIBLE CATALOG ============== -->
+<section class="slide">
+  <div class="eyebrow">Pain 3 of 5</div>
+  <h2>From "Bear to Update" to Drag-and-Drop</h2>
+
+  <div class="quote">
+    Adding new capabilities like fabric printing to the custom estimator is clunky and a bear to update.
+    <span class="who">&mdash; Anthony, on the rigidity of the current catalog</span>
+  </div>
+
+  <div class="arch-compare">
+    <div class="arch-side before">
+      <h3>Today &mdash; Adding "fabric printing"</h3>
+      <div class="lucid-card compact">
+        <div class="lucid-info">
+          <div class="lucid-label">Lucid &middot; Page 6</div>
+          <div class="lucid-title">Pain 3 Today</div>
+        </div>
+        <a class="lucid-btn" href="https://lucid.app/lucidchart/8cada37e-3e31-43a5-8662-840e0f8aad24/edit?invitationId=inv_0c1602a9-4b73-490f-92b7-e401339269f6&page=p6" target="_blank" rel="noopener">Open</a>
+      </div>
+    </div>
+    <div class="arch-side after">
+      <h3>Tomorrow &mdash; Adding a new product in RCA</h3>
+      <div class="lucid-card compact">
+        <div class="lucid-info">
+          <div class="lucid-label">Lucid &middot; Page 7</div>
+          <div class="lucid-title">Pain 3 Tomorrow</div>
+        </div>
+        <a class="lucid-btn" href="https://lucid.app/lucidchart/8cada37e-3e31-43a5-8662-840e0f8aad24/edit?invitationId=inv_0c1602a9-4b73-490f-92b7-e401339269f6&page=p7" target="_blank" rel="noopener">Open</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="talk">
+    The fabric-printing example you mentioned is the perfect test case. Today, adding a new banner type to the Estimator is a development cycle &mdash; weeks of work, regression testing, deploy. In RCA, an admin drags-and-drops a new Product2 with its attributes, configures pricing, and activates. Same day. The "Home Depot-style" search UI you saw in the Mitch demo is what your reps see when they go shopping for that new product on a quote.
+  </div>
+
+  <div class="prompts">
+    <h4>Discussion prompts</h4>
+    <ul>
+      <li>What's the most recent product change you wanted to make and couldn't?</li>
+      <li>Who would own catalog updates &mdash; Anthony, Colin, or someone in the business?</li>
+      <li>Should we test this with one product the team has been wanting to add?</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============== SLIDE 7: PAIN 4 — RESOURCE CONSTRAINTS ============== -->
+<section class="slide">
+  <div class="eyebrow">Pain 4 of 5</div>
+  <h2>Two-Person Team, Massive Surface Area</h2>
+
+  <div class="quote">
+    The entire IT shop is just two people. We're hesitant to take on massive dev projects and prefer admin-friendly configurations moving forward.
+    <span class="who">&mdash; Anthony &amp; Colin</span>
+  </div>
+
+  <div class="arch-compare">
+    <div class="arch-side before">
+      <h3>Today &mdash; Code-first maintenance</h3>
+      <div class="lucid-card compact">
+        <div class="lucid-info">
+          <div class="lucid-label">Lucid &middot; Page 8</div>
+          <div class="lucid-title">Pain 4 Today</div>
+        </div>
+        <a class="lucid-btn" href="https://lucid.app/lucidchart/8cada37e-3e31-43a5-8662-840e0f8aad24/edit?invitationId=inv_0c1602a9-4b73-490f-92b7-e401339269f6&page=p8" target="_blank" rel="noopener">Open</a>
+      </div>
+    </div>
+    <div class="arch-side after">
+      <h3>Tomorrow &mdash; Admin-first maintenance</h3>
+      <div class="lucid-card compact">
+        <div class="lucid-info">
+          <div class="lucid-label">Lucid &middot; Page 9</div>
+          <div class="lucid-title">Pain 4 Tomorrow</div>
+        </div>
+        <a class="lucid-btn" href="https://lucid.app/lucidchart/8cada37e-3e31-43a5-8662-840e0f8aad24/edit?invitationId=inv_0c1602a9-4b73-490f-92b7-e401339269f6&page=p9" target="_blank" rel="noopener">Open</a>
+      </div>
+    </div>
+  </div>
+
+  <p style="font-size: 16px; margin-top: 18px;">
+    <span class="pill insight">Reality check</span>
+    Some things will still need code. Britten's bespoke math (waste %, complexity-based labor) deserves an Apex action &mdash; but it's <em>isolated</em> code that plugs into the standard framework. Not a custom application.
+  </p>
+
+  <div class="talk">
+    The honest version of this is: you'll still write some code. There are pieces of your pricing math that are genuinely unique to Britten and don't belong in a declarative tool. But what changes is where that code lives. Today, your code <em>is</em> the application. Tomorrow, your code is small, isolated callouts that plug into a standard framework you didn't have to build. Anthony, that's the difference between maintaining 40,000 lines of Apex and maintaining 2,000.
+  </div>
+
+  <div class="prompts">
+    <h4>Discussion prompts</h4>
+    <ul>
+      <li>Of your current Apex codebase, which pieces would you happily delete tomorrow if RCA covered them?</li>
+      <li>Which pieces would you keep on principle, because they encode something genuinely unique?</li>
+      <li>What's a realistic ratio of admin-changes to dev-changes you'd want post-migration?</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============== SLIDE 8: PAIN 5 — DECOMPOSITION ============== -->
+<section class="slide">
+  <div class="eyebrow">Pain 5 of 5</div>
+  <h2>Decomposition: One Line, Many Realities</h2>
+
+  <div class="quote">
+    One line item on a quote might represent 100 different art files or multiple shipments to different states &mdash; we use junction objects to manage that.
+    <span class="who">&mdash; Discovery doc</span>
+  </div>
+
+  <div class="arch-compare">
+    <div class="arch-side before">
+      <h3>Today &mdash; Junction objects between Job &amp; Invoice</h3>
+      <div class="lucid-card compact">
+        <div class="lucid-info">
+          <div class="lucid-label">Lucid &middot; Page 10</div>
+          <div class="lucid-title">Pain 5 Today</div>
+        </div>
+        <a class="lucid-btn" href="https://lucid.app/lucidchart/8cada37e-3e31-43a5-8662-840e0f8aad24/edit?invitationId=inv_0c1602a9-4b73-490f-92b7-e401339269f6&page=p10" target="_blank" rel="noopener">Open</a>
+      </div>
+    </div>
+    <div class="arch-side after">
+      <h3>Tomorrow &mdash; Native decomposition</h3>
+      <div class="lucid-card compact">
+        <div class="lucid-info">
+          <div class="lucid-label">Lucid &middot; Page 11</div>
+          <div class="lucid-title">Pain 5 Tomorrow</div>
+        </div>
+        <a class="lucid-btn" href="https://lucid.app/lucidchart/8cada37e-3e31-43a5-8662-840e0f8aad24/edit?invitationId=inv_0c1602a9-4b73-490f-92b7-e401339269f6&page=p11" target="_blank" rel="noopener">Open</a>
+      </div>
+    </div>
+  </div>
+
+  <p style="font-size: 16px; margin-top: 18px;">
+    <span class="pill gain">The real win</span>
+    Anthony, when you said "the commercial vs. fulfillment view is highly relevant" &mdash; this is what you were pointing at. One quote line on the customer's invoice. Many fulfillment lines on the production floor. No junction-object gymnastics in the middle.
+  </p>
+
+  <div class="talk">
+    This is the slide that I think will resonate most because you've already built the workaround. You have junction objects today doing what RCA does natively. The "decomposition" feature in RCA breaks one commercial line into N fulfillment lines based on rules you configure once. Quality team sees one task. State A shipping team sees another. Finance sees one invoice. Customer sees one quote line. You stop maintaining the glue.
+  </div>
+
+  <div class="prompts">
+    <h4>Discussion prompts</h4>
+    <ul>
+      <li>Walk us through your most complex real example &mdash; the one with the most fulfillment activities behind one quote line.</li>
+      <li>Today, where does the "where is this job?" question get answered? Who has visibility?</li>
+      <li>If you could remove one custom junction object tomorrow, which one would it be?</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============== SLIDE 9: AREAS OF INTEREST — ATTRIBUTE-BASED CATALOG ============== -->
+<section class="slide">
+  <div class="eyebrow">Area of Interest</div>
+  <h2>Attribute-Based Catalog &mdash; Why It's Built for Britten</h2>
+  <p class="lede">"Everything is custom" is your reality. Attribute-based modeling is the platform's answer to that reality &mdash; without an explosion of SKUs.</p>
+
+  <div class="arch-compare">
+    <div class="arch-side before">
+      <h3>Traditional Approach &mdash; SKU explosion</h3>
+      <div class="lucid-card compact">
+        <div class="lucid-info">
+          <div class="lucid-label">Lucid &middot; Page 12</div>
+          <div class="lucid-title">SKU Explosion</div>
+        </div>
+        <a class="lucid-btn" href="https://lucid.app/lucidchart/8cada37e-3e31-43a5-8662-840e0f8aad24/edit?invitationId=inv_0c1602a9-4b73-490f-92b7-e401339269f6&page=p12" target="_blank" rel="noopener">Open</a>
+      </div>
+    </div>
+    <div class="arch-side after">
+      <h3>RCA Attribute-Based &mdash; Britten's model</h3>
+      <div class="lucid-card compact">
+        <div class="lucid-info">
+          <div class="lucid-label">Lucid &middot; Page 13</div>
+          <div class="lucid-title">Attribute-Based</div>
+        </div>
+        <a class="lucid-btn" href="https://lucid.app/lucidchart/8cada37e-3e31-43a5-8662-840e0f8aad24/edit?invitationId=inv_0c1602a9-4b73-490f-92b7-e401339269f6&page=p13" target="_blank" rel="noopener">Open</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="talk">
+    You said it best yourselves: "we view everything as custom." That mindset is fundamentally incompatible with a traditional SKU catalog &mdash; which is why you never built one. RCA is built around exactly your worldview: one logical product, many attributes, infinite combinations. A banner is a banner. The attributes determine what it costs, what it ships as, how it's fulfilled. You maintain the attributes, not 10,000 SKUs.
+  </div>
+</section>
+
+<!-- ============== SLIDE 10: HEADLESS / API-FIRST ============== -->
+<section class="slide">
+  <div class="eyebrow">Area of Interest</div>
+  <h2>Modular &amp; Headless &mdash; Use Only What You Need</h2>
+  <p class="lede">You have customer portals and a working Business Central integration. RCA's API-first design means you adopt the pieces you want and leave the rest.</p>
+
+  <div class="lucid-card">
+    <div class="lucid-info">
+      <div class="lucid-label">Lucid &middot; Page 14</div>
+      <div class="lucid-title">Modular &amp; Headless RCA</div>
+      <div class="lucid-subtitle">External systems (Portal, BC, Avalara) on the left, RCA modules on the right. RCA Billing explicitly NOT adopted.</div>
+    </div>
+    <a class="lucid-btn" href="https://lucid.app/lucidchart/8cada37e-3e31-43a5-8662-840e0f8aad24/edit?invitationId=inv_0c1602a9-4b73-490f-92b7-e401339269f6&page=p14" target="_blank" rel="noopener">Open in Lucid</a>
+  </div>
+
+  <p style="font-size: 16px; margin-top: 18px;">
+    <span class="pill gain">What you adopt</span> Catalog, Pricing, CPQ, Order/Decomposition, Salesforce-side Invoice<br/>
+    <span class="pill" style="background: #F3F3F3; color: #666; border: 1px solid #999; margin-top: 8px;">What you skip</span> RCA Billing engine &mdash; Business Central remains the financial system of record
+  </p>
+
+  <div class="talk">
+    Some customers buy RCA and adopt every module. You don't have to. Business Central works. Avalara works. Your customer portal integrations work. RCA is API-first &mdash; the pieces you adopt expose APIs to the systems you keep. We're suggesting you take Catalog, Pricing, CPQ, Order, and the Salesforce-side Invoice. We're explicitly suggesting you <em>skip</em> the RCA Billing engine because Business Central already does that job well.
+  </div>
+
+  <div class="prompts">
+    <h4>Discussion prompts</h4>
+    <ul>
+      <li>Which of your existing integrations would you most want to keep exactly as-is?</li>
+      <li>Are there any portal integrations we haven't accounted for?</li>
+      <li>If we adopted just Catalog and Pricing first &mdash; would that solve enough to be worth doing?</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============== SLIDE 11: MIGRATION PATH ============== -->
+<section class="slide">
+  <div class="eyebrow">How we get there</div>
+  <h2>The Migration Path</h2>
+  <p class="lede">Standard objects replace custom ones, in a sequence designed to keep the production floor running every day.</p>
+
+  <div class="lucid-card">
+    <div class="lucid-info">
+      <div class="lucid-label">Lucid &middot; Page 15</div>
+      <div class="lucid-title">Migration Path</div>
+      <div class="lucid-subtitle">Six phases &mdash; Discovery &rarr; Catalog &rarr; Pricing &rarr; Quoting &rarr; Order/Invoice &rarr; Pilot &rarr; Other Divisions.</div>
+    </div>
+    <a class="lucid-btn" href="https://lucid.app/lucidchart/8cada37e-3e31-43a5-8662-840e0f8aad24/edit?invitationId=inv_0c1602a9-4b73-490f-92b7-e401339269f6&page=p15" target="_blank" rel="noopener">Open in Lucid</a>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 18px;">
+    <div style="background: var(--gain-bg); border-left: 4px solid var(--gain); padding: 14px 18px; border-radius: 6px;">
+      <h4 style="margin: 0 0 6px; color: var(--gain);">What stays running the entire time</h4>
+      <ul style="margin: 0; padding-left: 18px; font-size: 14px;">
+        <li>Microsoft Business Central &amp; financial close</li>
+        <li>Avalara tax calculation</li>
+        <li>Authorize.net payments</li>
+        <li>Manufacturing floor screens (pre-press, print queues, QR job sheets)</li>
+        <li>Customer-portal API integrations</li>
+      </ul>
+    </div>
+    <div style="background: var(--insight-bg); border-left: 4px solid var(--insight); padding: 14px 18px; border-radius: 6px;">
+      <h4 style="margin: 0 0 6px; color: var(--insight);">The "no go-live without" gates</h4>
+      <ul style="margin: 0; padding-left: 18px; font-size: 14px;">
+        <li>Pricing parity proven on 12+ months of historical quotes</li>
+        <li>Data-migration plan signed off by Anthony &amp; Colin</li>
+        <li>Constraint Builder demonstrated against a real Britten rule</li>
+        <li>Manufacturing floor regression-tested end-to-end</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="talk">
+    This isn't a big-bang. It's six phases, sequenced so that production never stops. Phase zero is the architecture review &mdash; the partner returns with their data-migration plan and a Constraint Builder example against your actual pricing rules. Each phase has a clear gate before we move on. And the most important thing on this slide isn't the boxes &mdash; it's the green panel on the bottom left. The financial system, payments, tax, and the production floor all stay running every single day.
+  </div>
+</section>
+
+<!-- ============== SLIDE 12: WHERE WE NEED YOU ============== -->
+<section class="slide">
+  <div class="eyebrow">Your turn</div>
+  <h2>Where We Need You to Help Us Decide</h2>
+  <p class="lede">Three open questions where Britten's input shapes the recommendation.</p>
+
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 24px 0;">
+
+    <div style="background: white; border-top: 4px solid var(--insight); padding: 20px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">
+      <div class="pill insight">Question 1</div>
+      <h3 style="margin: 12px 0 8px; color: var(--sf-navy);">Pilot Division</h3>
+      <p style="font-size: 14px;">Print first is the obvious choice (mature data, clearest pricing). After Print, which division do we tackle next: Foam, BoxPop, or Woodworking?</p>
+    </div>
+
+    <div style="background: white; border-top: 4px solid var(--insight); padding: 20px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">
+      <div class="pill insight">Question 2</div>
+      <h3 style="margin: 12px 0 8px; color: var(--sf-navy);">Phase 1 Pricing Test</h3>
+      <p style="font-size: 14px;">Pick the gnarliest pricing rule from the Estimator. The partner will model it in Constraint Builder and bring it back in two weeks as proof.</p>
+    </div>
+
+    <div style="background: white; border-top: 4px solid var(--insight); padding: 20px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">
+      <div class="pill insight">Question 3</div>
+      <h3 style="margin: 12px 0 8px; color: var(--sf-navy);">Parity Sign-Off</h3>
+      <p style="font-size: 14px;">Who signs off on pricing parity before go-live? Anthony? Sales leadership? Finance? We need a named human, not a role.</p>
+    </div>
+
+  </div>
+
+  <div class="talk">
+    These three questions are where we need your judgment, not ours. The first two are about scope; the third is about governance. If we get answers to these by the end of next week, the partner can come back with a sharper proposal. Let's spend the rest of our time today on these &mdash; and on anything else still nagging at you.
+  </div>
+</section>
+
+<!-- ============== SLIDE 13: NEXT STEPS ============== -->
+<section class="slide">
+  <div class="eyebrow">Close</div>
+  <h2>What Happens Next</h2>
+
+  <div style="display: grid; grid-template-columns: 80px 1fr 200px; gap: 16px; align-items: center; margin: 24px 0;">
+
+    <div style="text-align: center; font-size: 32px; font-weight: 700; color: var(--sf-blue);">1</div>
+    <div>
+      <h3 style="margin: 0 0 4px; color: var(--sf-navy);">Workshop summary &amp; diagrams sent</h3>
+      <p style="margin: 0; font-size: 14px; color: var(--sf-grey-700);">Including this deck, the parking lot, and the open questions.</p>
+    </div>
+    <div style="font-size: 13px; color: var(--sf-grey-700);"><b>Owner:</b> Salesforce<br/><b>By:</b> Within 48 hours</div>
+
+    <div style="text-align: center; font-size: 32px; font-weight: 700; color: var(--sf-blue);">2</div>
+    <div>
+      <h3 style="margin: 0 0 4px; color: var(--sf-navy);">Partner returns with proof</h3>
+      <p style="margin: 0; font-size: 14px; color: var(--sf-grey-700);">Data-migration plan + Constraint Builder modeled against the real Britten rule we picked today.</p>
+    </div>
+    <div style="font-size: 13px; color: var(--sf-grey-700);"><b>Owner:</b> Implementation partner<br/><b>By:</b> 2 weeks</div>
+
+    <div style="text-align: center; font-size: 32px; font-weight: 700; color: var(--sf-blue);">3</div>
+    <div>
+      <h3 style="margin: 0 0 4px; color: var(--sf-navy);">Deeper session: Order &amp; Decomposition</h3>
+      <p style="margin: 0; font-size: 14px; color: var(--sf-grey-700);">With manufacturing leadership in the room. Walk through real fulfillment flows.</p>
+    </div>
+    <div style="font-size: 13px; color: var(--sf-grey-700);"><b>Owner:</b> Salesforce + Britten<br/><b>By:</b> 3 weeks</div>
+
+  </div>
+
+  <div class="talk">
+    Three concrete commitments before we close. I'll send the summary and these diagrams within 48 hours. The partner will come back in two weeks with a working Constraint Builder example against the rule we picked together &mdash; not a generic demo. And we'll schedule the order-and-decomposition deep dive in three weeks with your manufacturing leadership in the room. Anthony, Colin &mdash; thank you for the time today.
+  </div>
+</section>
+
+<!-- ============== SLIDE 14: THANK YOU ============== -->
+<section class="slide cover">
+  <div class="eyebrow" style="color: white; opacity: 0.8;">Thank you</div>
+  <h1 style="font-size: 60px;">Anthony &amp; Colin</h1>
+  <div class="sub">Your decade of judgment is what makes this project possible.</div>
+  <div class="meta">Questions or pushback &mdash; bring them. That's the most useful thing you can do.</div>
+</section>
+
+</body>
+</html>

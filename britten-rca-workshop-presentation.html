@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Britten &mdash; RCA Mapping Workshop (Virtual Presentation)</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
+<script>
+  // Capture each diagram's source BEFORE Mermaid replaces innerHTML, then add
+  // a per-diagram toolbar with: Copy Mermaid, Open in Mermaid Live, Open in draw.io.
+  // Both Mermaid Live and draw.io can export to PNG/SVG which Lucid imports natively.
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.mermaid').forEach(function (el, idx) {
+      var source = el.textContent.trim();
+      el.dataset.source = source;
+
+      // Build toolbar
+      var bar = document.createElement('div');
+      bar.className = 'diag-tools';
+
+      var copyBtn = document.createElement('button');
+      copyBtn.type = 'button';
+      copyBtn.textContent = 'Copy Mermaid';
+      copyBtn.addEventListener('click', function () {
+        navigator.clipboard.writeText(source).then(function () {
+          copyBtn.textContent = 'Copied!';
+          copyBtn.classList.add('copied');
+          setTimeout(function () {
+            copyBtn.textContent = 'Copy Mermaid';
+            copyBtn.classList.remove('copied');
+          }, 1800);
+        });
+      });
+      bar.appendChild(copyBtn);
+
+      // Mermaid Live editor — uses pako-deflated, base64url-encoded JSON
+      var liveLink = document.createElement('a');
+      liveLink.target = '_blank';
+      liveLink.rel = 'noopener';
+      liveLink.textContent = 'Open in Mermaid Live';
+      try {
+        var payload = { code: source, mermaid: { theme: 'default' }, autoSync: true, updateDiagram: true };
+        var json = JSON.stringify(payload);
+        var deflated = pako.deflate(json, { level: 9 });
+        var b64 = btoa(String.fromCharCode.apply(null, deflated))
+          .replace(/\+/g, '-').replace(/\//g, '_');
+        liveLink.href = 'https://mermaid.live/edit#pako:' + b64;
+      } catch (e) {
+        liveLink.href = 'https://mermaid.live';
+      }
+      bar.appendChild(liveLink);
+
+      // Insert toolbar above the diagram
+      el.parentNode.insertBefore(bar, el);
+    });
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#E5F1FB',
+        primaryBorderColor: '#0176D3',
+        primaryTextColor: '#032D60',
+        lineColor: '#0176D3',
+        fontSize: '14px'
+      },
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' }
+    });
+    mermaid.run();
+  });
+</script>
+<style>
+  :root {
+    --sf-navy: #032D60;
+    --sf-blue: #0176D3;
+    --sf-blue-light: #E5F1FB;
+    --sf-grey-100: #F3F3F3;
+    --sf-grey-300: #C9C9C9;
+    --sf-grey-700: #444;
+    --pain: #C62828;
+    --pain-bg: #FFEBEE;
+    --gain: #2E7D32;
+    --gain-bg: #E8F5E9;
+    --insight: #E65100;
+    --insight-bg: #FFF3E0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Salesforce Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0; padding: 0;
+    background: #FAFAFA;
+    color: #181818;
+    line-height: 1.55;
+  }
+
+  /* Each "slide" is a section the presenter scrolls to */
+  .slide {
+    min-height: 100vh;
+    padding: 60px 80px;
+    border-bottom: 1px solid var(--sf-grey-300);
+    background: white;
+    page-break-after: always;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .slide.cover {
+    background: linear-gradient(135deg, var(--sf-navy) 0%, var(--sf-blue) 100%);
+    color: white;
+    text-align: center;
+  }
+  .slide.cover h1 { font-size: 52px; margin: 0 0 18px; font-weight: 700; line-height: 1.15; }
+  .slide.cover .sub { font-size: 22px; opacity: 0.9; margin-bottom: 12px; }
+  .slide.cover .meta { font-size: 14px; opacity: 0.8; letter-spacing: 1px; text-transform: uppercase; margin-top: 32px; }
+
+  .slide h2 {
+    color: var(--sf-navy);
+    font-size: 36px;
+    margin: 0 0 8px;
+    line-height: 1.2;
+  }
+  .slide .eyebrow {
+    color: var(--sf-blue);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .slide .lede {
+    font-size: 18px;
+    color: var(--sf-grey-700);
+    margin: 6px 0 30px;
+    max-width: 1000px;
+  }
+
+  /* Diagram container */
+  .diagram-frame {
+    background: var(--sf-grey-100);
+    border-radius: 12px;
+    padding: 30px 24px;
+    margin: 16px 0;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
+    position: relative;
+  }
+  .mermaid {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+  }
+
+  /* Diagram toolbar (copy / open-in-editor) */
+  .diag-tools {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .diag-tools button, .diag-tools a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    background: white;
+    color: var(--sf-blue);
+    border: 1px solid var(--sf-blue);
+    border-radius: 14px;
+    font-size: 11.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+  .diag-tools button:hover, .diag-tools a:hover {
+    background: var(--sf-blue);
+    color: white;
+  }
+  .diag-tools button.copied {
+    background: var(--gain);
+    color: white;
+    border-color: var(--gain);
+  }
+  @media print {
+    .diag-tools { display: none; }
+  }
+
+  /* Talk track */
+  .talk {
+    background: var(--sf-blue-light);
+    border-left: 4px solid var(--sf-blue);
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin: 18px 0;
+    font-size: 15px;
+    font-style: italic;
+    color: #1a3a5c;
+  }
+  .talk::before {
+    content: "Say while sharing this slide:";
+    display: block;
+    font-style: normal;
+    font-size: 11px;
+    color: var(--sf-blue);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  /* Discussion prompts */
+  .prompts {
+    background: var(--insight-bg);
+    border-left: 4px solid var(--insight);
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin: 18px 0;
+    font-size: 14.5px;
+  }
+  .prompts h4 {
+    margin: 0 0 8px;
+    font-size: 12px;
+    color: var(--insight);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+  .prompts ul { margin: 0; padding-left: 20px; }
+  .prompts li { margin: 4px 0; }
+
+  /* Pain / Gain pair card */
+  .pain-gain {
+    display: grid;
+    grid-template-columns: 1fr 50px 1fr;
+    gap: 16px;
+    align-items: center;
+    margin: 18px 0;
+  }
+  .pain-card, .gain-card {
+    border-radius: 10px;
+    padding: 18px 22px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    min-height: 130px;
+  }
+  .pain-card { background: var(--pain-bg); border-left: 5px solid var(--pain); }
+  .gain-card { background: var(--gain-bg); border-left: 5px solid var(--gain); }
+  .pain-card .label, .gain-card .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .pain-card .label { color: var(--pain); }
+  .gain-card .label { color: var(--gain); }
+  .pain-card h3, .gain-card h3 { margin: 0 0 6px; font-size: 17px; color: var(--sf-navy); }
+  .pain-card p, .gain-card p { margin: 0; font-size: 13.5px; }
+  .arrow {
+    text-align: center;
+    font-size: 28px;
+    color: var(--sf-blue);
+    font-weight: 700;
+  }
+
+  /* Quote bubble for the customer's own words */
+  .quote {
+    background: white;
+    border: 2px solid var(--pain);
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin: 16px 0;
+    font-style: italic;
+    color: #2A2A2A;
+    position: relative;
+    font-size: 15px;
+  }
+  .quote::before {
+    content: "\201C";
+    font-size: 60px;
+    color: var(--pain);
+    position: absolute;
+    top: -10px;
+    left: 12px;
+    font-family: Georgia, serif;
+    line-height: 1;
+  }
+  .quote .who {
+    display: block;
+    font-style: normal;
+    font-size: 12px;
+    color: var(--sf-grey-700);
+    margin-top: 8px;
+    font-weight: 600;
+  }
+
+  /* Two-up architecture compare */
+  .arch-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 18px 0;
+  }
+  .arch-side {
+    background: white;
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  }
+  .arch-side.before { border-top: 4px solid var(--pain); }
+  .arch-side.after { border-top: 4px solid var(--gain); }
+  .arch-side h3 {
+    margin: 0 0 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .arch-side.before h3 { color: var(--pain); }
+  .arch-side.after h3 { color: var(--gain); }
+  .arch-side .mermaid { background: var(--sf-grey-100); padding: 16px; }
+
+  /* Pill */
+  .pill {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 14px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-right: 6px;
+  }
+  .pill.pain { background: var(--pain-bg); color: var(--pain); border: 1px solid var(--pain); }
+  .pill.gain { background: var(--gain-bg); color: var(--gain); border: 1px solid var(--gain); }
+  .pill.insight { background: var(--insight-bg); color: var(--insight); border: 1px solid var(--insight); }
+
+  /* Footer of each slide */
+  .slide-footer {
+    margin-top: auto;
+    padding-top: 24px;
+    border-top: 1px solid var(--sf-grey-100);
+    font-size: 12px;
+    color: var(--sf-grey-700);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* Print / present optimizations */
+  @media print {
+    body { background: white; }
+    .slide { min-height: auto; padding: 40px 60px; page-break-after: always; }
+    .slide.cover { background: var(--sf-navy) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .talk, .prompts, .pain-card, .gain-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============== SLIDE 1: COVER ============== -->
+<section class="slide cover">
+  <div class="eyebrow" style="color: white; opacity: 0.8;">Virtual Workshop &middot; Mapping Today to Tomorrow</div>
+  <h1>From "Bodies Buried"<br/>to Clicks-Not-Code</h1>
+  <div class="sub">Britten's path from custom Apex to Revenue Cloud Advanced</div>
+  <div class="meta">Salesforce &middot; Britten Media &middot; Anthony Vozza &middot; Colin MacGregor</div>
+
+  <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 14px 20px; margin-top: 36px; max-width: 760px; margin-left: auto; margin-right: auto; text-align: left; font-size: 13px; line-height: 1.7;">
+    <b style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.85;">Facilitator note &mdash; not visible to audience when presenting</b><br/>
+    Each diagram has a <b>Copy Mermaid</b> + <b>Open in Mermaid Live</b> toolbar (visible on screen, hidden in print/PDF). Open in Mermaid Live &rarr; Actions &rarr; Export PNG or SVG &rarr; drag into Lucidchart. SVG ungroups in Lucid for full editability.
+  </div>
+</section>
+
+<!-- ============== SLIDE 2: WHAT YOU TOLD US ============== -->
+<section class="slide">
+  <div class="eyebrow">Where we start</div>
+  <h2>What you told us</h2>
+  <p class="lede">Five themes from our discovery conversations &mdash; in your words, not ours. Today's job is to map each one to a concrete RCA answer.</p>
+
+  <div class="quote">
+    A previous Salesforce architect refused to touch our org &mdash; "not with a 10-foot pole."
+    <span class="who">&mdash; Anthony, on the 2014-era technical debt</span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 24px 0;">
+
+    <div class="pain-card" style="min-height: auto;">
+      <div class="label">Pain 1</div>
+      <h3 style="font-size: 15px;">Legacy Tech Debt</h3>
+      <p style="font-size: 12px;">Org built 2014&ndash;2016. Heavy Apex, Visualforce, workflow rules, process builders. New Salesforce features can't be adopted.</p>
+      <p style="font-size: 11px; color: var(--sf-grey-700); margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(198,40,40,0.2);"><b>Cost:</b> every release passes Britten by.</p>
+    </div>
+
+    <div class="pain-card" style="min-height: auto;">
+      <div class="label">Pain 2</div>
+      <h3 style="font-size: 15px;">Scaling Pricing</h3>
+      <p style="font-size: 12px;">Only Print has the Apex Estimator. Foam3D&trade;, BoxPop&reg;, Woodworking run on "sophisticated spreadsheets" with no path into Salesforce.</p>
+      <p style="font-size: 11px; color: var(--sf-grey-700); margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(198,40,40,0.2);"><b>Cost:</b> 3 of 4 divisions can't scale on the platform.</p>
+    </div>
+
+    <div class="pain-card" style="min-height: auto;">
+      <div class="label">Pain 3</div>
+      <h3 style="font-size: 15px;">Inflexible Catalog</h3>
+      <p style="font-size: 12px;">Adding new capabilities (e.g. fabric printing) is "clunky" and "a bear to update." Each change is a multi-week dev cycle.</p>
+      <p style="font-size: 11px; color: var(--sf-grey-700); margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(198,40,40,0.2);"><b>Cost:</b> growth is gated by IT capacity.</p>
+    </div>
+
+    <div class="pain-card" style="min-height: auto;">
+      <div class="label">Pain 4</div>
+      <h3 style="font-size: 15px;">Two-Person Team</h3>
+      <p style="font-size: 12px;">Anthony &amp; Colin maintain the entire org. Explicit preference for "admin-friendly" config. Past partner experience was scrapped.</p>
+      <p style="font-size: 11px; color: var(--sf-grey-700); margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(198,40,40,0.2);"><b>Cost:</b> all change requests funnel through 1.5 FTE.</p>
+    </div>
+
+    <div class="pain-card" style="min-height: auto;">
+      <div class="label">Pain 5</div>
+      <h3 style="font-size: 15px;">Decomposition</h3>
+      <p style="font-size: 12px;">One quote line = 100 art files or multi-state shipments. Today managed via custom junction objects sitting between Job_Item__c and Invoice.</p>
+      <p style="font-size: 11px; color: var(--sf-grey-700); margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(198,40,40,0.2);"><b>Cost:</b> brittle glue layer that breaks on edge cases.</p>
+    </div>
+
+  </div>
+
+  <div class="talk">
+    Before we go anywhere near RCA today, I want to read back what we heard from you. Five themes, all in your words. If any of these are wrong or have shifted since we last talked, please stop me. The whole point of today is to make sure we're solving the actual problem &mdash; not the one we imagined.
+  </div>
+</section>
+
+<!-- ============== SLIDE 3: WHERE THE PAIN LIVES IN YOUR ARCHITECTURE ============== -->
+<section class="slide">
+  <div class="eyebrow">The big picture</div>
+  <h2>Where each pain lives in your architecture</h2>
+  <p class="lede">This is your current architecture as we understand it. The five pain points aren't abstract &mdash; they live at specific places in this diagram. We'll walk through each one in the next slides.</p>
+
+  <div class="diagram-frame">
+    <div class="mermaid">
+flowchart LR
+
+    %% ===== Inbound (lead capture only) =====
+    WEB["Web Forms"]
+    CHAT["Live Chat"]
+
+    %% ===== Partner org (S2S) =====
+    PARTNER["Partner Salesforce Org<br/>(S2S sharing)"]
+
+    %% ===== Britten Salesforce (one box) =====
+    subgraph SFDC["Britten Salesforce Org &mdash; CRM + MIS today"]
+      direction TB
+      CC["Customer_Communication__c"]
+      LEAD["Lead"]
+      ACC["Account"]
+      CON["Contact"]
+      OPP["Opportunity"]
+      QUOTE["Standard Quote + QLI"]
+      EST["Print Estimator<br/>Apex + VF<br/>cost-plus &middot; bell-curve<br/><b>P1</b> + <b>P3</b>"]
+      SDDOCS["SD Docs"]
+      JOB["Job__c (custom Order)"]
+      JI["Job_Item__c<br/>~450 fields"]
+      FUL["Fulfillment__c<br/>(per-state shipments)"]
+      ILI["Invoice_Line_Item__c<br/>(junction) &middot; <b>P5</b>"]
+      INV["Invoice__c<br/>(must start in SF)"]
+      OTHER["Foam &middot; BoxPop &middot; Wood<br/>📊 spreadsheets &middot; <b>P2</b>"]
+      PREPRESS["Pre-press queue"]
+      PRINTQ["Print operator queue"]
+      QR["Job sheet + QR"]
+    end
+
+    %% ===== External Systems (one box) =====
+    subgraph EXT["External Systems (unchanged)"]
+      direction TB
+      AVA["Avalara<br/>(tax)"]
+      BC["MS Business Central<br/>(finance + supply chain)"]
+      AUTH["Authorize.net<br/>(cards &middot; checks/ACH)"]
+      OSLINK["Oslink (shipping)"]
+      FEDEX["FedEx"]
+      UPS["UPS"]
+      ILLUS["Adobe Illustrator<br/>(art team)"]
+      FOAM3D["Foam 3D design SW"]
+      CABINET["30-yr cabinet DB<br/>(woodworking)"]
+    end
+
+    %% ===== Inbound flows =====
+    WEB --> CC
+    CHAT --> CC
+    CC --> LEAD
+
+    %% ===== CRM relationships =====
+    LEAD --> OPP
+    ACC --> OPP
+    CON --> ACC
+
+    %% ===== Quoting =====
+    OPP --> QUOTE
+    QUOTE -- "rep invokes" --> EST
+    EST -- "recommended price" --> QUOTE
+    QUOTE --> SDDOCS
+
+    %% ===== Closed-Won handoff =====
+    OPP -- "Closed-Won trigger" --> JOB
+    QUOTE -- "lines copied" --> JI
+    JOB --> JI
+    JI --> FUL
+    JI --> ILI
+    FUL --> ILI
+    ILI --> INV
+
+    %% ===== Manufacturing =====
+    JI --> PREPRESS
+    PREPRESS --> PRINTQ
+    JI --> QR
+    QR -. "scan updates" .-> JI
+    PREPRESS -. "art files" .-> ILLUS
+
+    %% ===== Division tools =====
+    OTHER -. "Foam uses" .-> FOAM3D
+    OTHER -. "Wood uses" .-> CABINET
+
+    %% ===== Outbound integrations =====
+    INV -- "tax call" --> AVA
+    INV -- "feeds" --> BC
+    INV -. "payments" .-> AUTH
+    JOB --> OSLINK
+    OSLINK --> FEDEX
+    OSLINK --> UPS
+    OSLINK -. "tracking #" .-> JOB
+
+    %% ===== S2S partner sharing =====
+    OPP <-- "S2S share" --> PARTNER
+    JOB <-- "S2S tracking" --> PARTNER
+
+    %% ===== Styling =====
+    classDef custom fill:#FFEBEE,stroke:#C62828,color:#B71C1C,stroke-width:2px
+    classDef ext fill:#ECEFF1,stroke:#455A64,color:#263238
+    classDef std fill:#E3F2FD,stroke:#1565C0,color:#0D47A1
+    classDef floor fill:#FFF8E1,stroke:#F57F17,color:#5D4037
+    classDef inbound fill:#F3E5F5,stroke:#6A1B9A,color:#4A148C
+    classDef partner fill:#E0F2F1,stroke:#00695C,color:#004D40
+    classDef divtool fill:#FFF9C4,stroke:#F9A825,color:#F57F17,stroke-width:2px
+
+    class EST,JOB,JI,FUL,ILI,INV,OTHER,SDDOCS custom
+    class AVA,BC,AUTH,OSLINK,FEDEX,UPS ext
+    class CC,LEAD,ACC,CON,OPP,QUOTE std
+    class PREPRESS,PRINTQ,QR floor
+    class WEB,CHAT inbound
+    class PARTNER partner
+    class ILLUS,FOAM3D,CABINET divtool
+
+    %% ===== Container colors (the two big boxes) =====
+    style SFDC fill:#EAF4FF,stroke:#0176D3,stroke-width:3px,color:#032D60
+    style EXT fill:#F5F5F5,stroke:#455A64,stroke-width:3px,color:#263238
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 12px 0 0;">
+    <div style="background: #EAF4FF; border-left: 3px solid #0176D3; padding: 6px 9px; border-radius: 4px; font-size: 11px;"><b style="color: #0176D3;">Light blue box</b> Britten Salesforce Org</div>
+    <div style="background: #F5F5F5; border-left: 3px solid #455A64; padding: 6px 9px; border-radius: 4px; font-size: 11px;"><b style="color: #455A64;">Grey box</b> External systems</div>
+    <div style="background: #E0F2F1; border-left: 3px solid #00695C; padding: 6px 9px; border-radius: 4px; font-size: 11px;"><b style="color: #00695C;">Teal</b> Partner org (S2S)</div>
+    <div style="background: #F3E5F5; border-left: 3px solid #6A1B9A; padding: 6px 9px; border-radius: 4px; font-size: 11px;"><b style="color: #6A1B9A;">Purple</b> Inbound capture</div>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 8px 0 0;">
+    <div style="background: #E3F2FD; border-left: 3px solid #1565C0; padding: 6px 9px; border-radius: 4px; font-size: 11px;"><b style="color: #1565C0;">Blue node</b> Standard Salesforce object</div>
+    <div style="background: var(--pain-bg); border-left: 3px solid var(--pain); padding: 6px 9px; border-radius: 4px; font-size: 11px;"><b style="color: var(--pain);">Red node</b> Custom (Apex/VF)</div>
+    <div style="background: #FFF8E1; border-left: 3px solid #F57F17; padding: 6px 9px; border-radius: 4px; font-size: 11px;"><b style="color: #F57F17;">Yellow</b> Manufacturing floor</div>
+    <div style="background: #FFF9C4; border-left: 3px solid #F9A825; padding: 6px 9px; border-radius: 4px; font-size: 11px;"><b style="color: #F9A825;">Mustard</b> Division / creative tools</div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 8px 0 0;">
+    <div style="background: var(--pain-bg); border-left: 3px solid var(--pain); padding: 6px 9px; border-radius: 4px; font-size: 11px;"><b style="color: var(--pain);">P1</b> Legacy Apex/VF (Print Estimator)</div>
+    <div style="background: var(--pain-bg); border-left: 3px solid var(--pain); padding: 6px 9px; border-radius: 4px; font-size: 11px;"><b style="color: var(--pain);">P2</b> 3 divisions on spreadsheets</div>
+    <div style="background: var(--pain-bg); border-left: 3px solid var(--pain); padding: 6px 9px; border-radius: 4px; font-size: 11px;"><b style="color: var(--pain);">P3</b> New products = code change</div>
+    <div style="background: var(--pain-bg); border-left: 3px solid var(--pain); padding: 6px 9px; border-radius: 4px; font-size: 11px;"><b style="color: var(--pain);">P4</b> All maintenance &rarr; 2 people</div>
+    <div style="background: var(--pain-bg); border-left: 3px solid var(--pain); padding: 6px 9px; border-radius: 4px; font-size: 11px;"><b style="color: var(--pain);">P5</b> Junction-object decomposition</div>
+  </div>
+
+  <div class="talk">
+    Anthony, this is the picture we built from your walkthrough &mdash; simplified to two boxes: your Salesforce org on the left in light blue, and everything external on the right in grey. Leads come from web forms and live chat. Anything coming in from a partner org flows through Salesforce-to-Salesforce sharing, both ways. Standard CRM works &mdash; and you mentioned the record types across the four divisions have all been merged into one process, which is huge. The Print Estimator is the Apex class that runs cost-plus on a bell curve and writes a <em>recommended</em> price &mdash; reps adjust freely from there, no system-enforced approvals. On Closed-Won, the Apex trigger on Opportunity creates Job__c; QuoteLineItems are copied into Job_Item__c, which is where all your custom attributes live (~450 fields). From there, Job_Item__c fans out to Fulfillment__c for shipments &mdash; one Job_Item can ship to many states &mdash; and Invoice_Line_Item__c is the junction that ties Job_Items and Fulfillments to a single Invoice__c. Critically, every invoice <em>must start in Salesforce</em> before passing to Business Central; that's the lever that gets the other divisions to enter data. Foam, BoxPop, and Wood still rely on standalone tools &mdash; the foam team has 3D design software, the woodworking team has that 30-year-old cabinet database. Art lives in Adobe Illustrator. Avalara handles tax, BC handles finance and supply chain, Authorize.net for cards (and a lot of checks/ACH still). <em>If any of this is off, please stop me &mdash; the rest of the conversation depends on getting this right.</em>
+  </div>
+
+  <div class="prompts">
+    <h4>Discussion prompts</h4>
+    <ul>
+      <li>Did we draw your architecture correctly? Wrong arrows, missing systems, mislabeled objects?</li>
+      <li>Is there a custom piece on this diagram that's <em>not</em> painful &mdash; that we should be careful about touching?</li>
+      <li>Of the five pains, which one would removing make the biggest difference for you tomorrow?</li>
+      <li>Is the partner-org S2S connection still active and important to preserve?</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============== SLIDE 4: PAIN 1 — LEGACY TECH DEBT ============== -->
+<section class="slide">
+  <div class="eyebrow">Pain 1 of 5</div>
+  <h2>Legacy Technical Debt</h2>
+
+  <div class="quote">
+    Heavily reliant on legacy Apex and Visualforce. The previous architect refused to touch the org &mdash; though we've cleaned it up significantly since.
+    <span class="who">&mdash; Discovery doc, summarized</span>
+  </div>
+
+  <div class="arch-compare">
+    <div class="arch-side before">
+      <h3>Today &mdash; Custom Objects</h3>
+      <div class="mermaid">
+flowchart TB
+    OPP[Opportunity]
+    QUOTE["Standard Quote<br/>+ QuoteLineItems"]
+    EST["Print Estimator<br/>Apex + VF<br/>cost-plus, recommended price"]
+    JOB["Job__c<br/>(custom Order)"]
+    JI["Job_Item__c<br/>~450 fields"]
+    FUL["Fulfillment__c<br/>(per-state shipments)"]
+    ILI["Invoice_Line_Item__c<br/>(junction)"]
+    INV["Invoice__c"]
+    AVA["Avalara"]
+    BC["MS Business Central"]
+
+    OPP --> QUOTE
+    QUOTE -- "rep invokes" --> EST
+    EST -- "recommended price" --> QUOTE
+    OPP -- "Closed-Won trigger" --> JOB
+    QUOTE -- "lines copied" --> JI
+    JOB --> JI
+    JI --> FUL
+    JI --> ILI
+    FUL --> ILI
+    ILI --> INV
+    INV --> AVA
+    INV --> BC
+
+    classDef custom fill:#FFEBEE,stroke:#C62828,color:#B71C1C,stroke-width:2px
+    classDef std fill:#E3F2FD,stroke:#1565C0,color:#0D47A1
+    classDef ext fill:#ECEFF1,stroke:#455A64
+    class EST,JOB,JI,FUL,ILI,INV custom
+    class OPP,QUOTE std
+    class AVA,BC ext
+      </div>
+    </div>
+    <div class="arch-side after">
+      <h3>Tomorrow &mdash; Standard RCA Objects</h3>
+      <div class="mermaid">
+flowchart TB
+    OPP2[Opportunity]
+    QUOTE2["RCA Quote<br/>+ Quote Lines"]
+    PP2["Pricing Procedure<br/>+ Constraint Builder"]
+    ORDER2["RCA Order<br/>(standard)"]
+    FOLI2["Fulfillment Order<br/>Line Items"]
+    RINV2["RCA Invoice<br/>(standard)"]
+    AVA2["Avalara"]
+    BC2["MS Business Central"]
+
+    OPP2 --> QUOTE2
+    QUOTE2 -- "rep invokes" --> PP2
+    PP2 -- "writes price" --> QUOTE2
+    OPP2 -- "Closed-Won (Flow)" --> ORDER2
+    QUOTE2 -- "lines copied" --> ORDER2
+    ORDER2 -- "decomposition" --> FOLI2
+    ORDER2 --> RINV2
+    RINV2 --> AVA2
+    RINV2 --> BC2
+
+    classDef gain fill:#E8F5E9,stroke:#2E7D32,color:#1B5E20,stroke-width:2px
+    classDef std fill:#E3F2FD,stroke:#1565C0,color:#0D47A1
+    classDef ext fill:#ECEFF1,stroke:#455A64
+    class PP2,ORDER2,FOLI2,RINV2 gain
+    class OPP2,QUOTE2 std
+    class AVA2,BC2 ext
+      </div>
+    </div>
+  </div>
+
+  <div style="background: var(--insight-bg); border-left: 3px solid var(--insight); padding: 10px 14px; border-radius: 4px; margin: 12px 0; font-size: 13px;">
+    <b style="color: var(--insight);">Note on the trigger:</b> the Closed-Won trigger is on the <b>Opportunity</b>, not the QuoteLineItem. It creates the Job__c record; QuoteLineItems are copied into Job_Item__c. Anthony &mdash; please correct anything we got wrong.
+  </div>
+
+  <div class="talk">
+    On the left is what we mapped together based on what you've described &mdash; the custom Print Estimator, Job__c, Job_Item__c with 450 fields, custom Invoice, junction objects for split shipments. Each red box is something only your team can maintain. On the right is the RCA equivalent. The shape of the business stays the same. Microsoft Business Central and Avalara stay exactly where they are. But everything in green is now a standard Salesforce object &mdash; which means it's documented, it gets new features automatically, and AI can reason over it.
+  </div>
+
+  <div class="prompts">
+    <h4>Questions to ask Anthony &amp; Colin</h4>
+    <ul>
+      <li>Did we capture the current state correctly? What's missing on the left side?</li>
+      <li>Which red box would you most like to retire first if you could pick only one?</li>
+      <li>Is there a custom object on the left we'd be sad to lose because it does something the standard objects can't?</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============== SLIDE 5: PAIN 2 — SCALING PRICING ============== -->
+<section class="slide">
+  <div class="eyebrow">Pain 2 of 5</div>
+  <h2>Scaling Pricing Across Divisions</h2>
+
+  <div class="quote">
+    The newer divisions &mdash; foam sculptures, shipping containers, woodworking &mdash; haven't been given the same love as Print. They each have their own tools. Some better than others. Some are like a sophisticated spreadsheet. It's just a resources thing and a priority thing.
+    <span class="who">&mdash; Anthony Vozza, deep dive</span>
+  </div>
+
+  <div class="arch-compare">
+    <div class="arch-side before">
+      <h3>Today &mdash; One engine for one division</h3>
+      <div class="mermaid">
+flowchart TB
+    PRINT[Print Division] --> EST_T["Print Estimator<br/>Apex (cost-plus, bell curve)"]
+    FOAM[Foam3D Division] --> SS_F["Standalone tool /<br/>spreadsheet (+ 3D design SW)"]
+    BOX[BoxPop Division] --> SS_B["Standalone tool /<br/>spreadsheet"]
+    WOOD[Woodworking Division] --> SS_W["Standalone tool /<br/>spreadsheet (+ 30-yr cabinet DB)"]
+
+    classDef pain fill:#FFEBEE,stroke:#C62828,color:#B71C1C,stroke-width:2px
+    classDef std fill:#E3F2FD,stroke:#1565C0
+    class EST_T,SS_F,SS_B,SS_W pain
+    class PRINT,FOAM,BOX,WOOD std
+      </div>
+    </div>
+    <div class="arch-side after">
+      <h3>Tomorrow &mdash; One framework, all divisions</h3>
+      <div class="mermaid">
+flowchart TB
+    PRINT2[Print Division] --> PP["Pricing Procedure<br/>+ Print attributes<br/>(complex &mdash; replaces Apex)"]
+    FOAM2[Foam3D Division] --> PP2["Pricing Procedure<br/>+ Foam attributes"]
+    BOX2[BoxPop Division] --> PP3["Flow / Pricing Procedure<br/>+ Container attributes"]
+    WOOD2[Woodworking Division] --> PP4["Flow / Pricing Procedure<br/>+ Wood attributes"]
+    PP --> SHARED["Shared Pricing Framework<br/>+ Constraint Builder<br/>(admin-friendly &middot; no code)"]
+    PP2 --> SHARED
+    PP3 --> SHARED
+    PP4 --> SHARED
+
+    classDef gain fill:#E8F5E9,stroke:#2E7D32,color:#1B5E20,stroke-width:2px
+    classDef shared fill:#E5F1FB,stroke:#0176D3,color:#032D60
+    classDef std fill:#E3F2FD,stroke:#1565C0
+    class PP,PP2,PP3,PP4 gain
+    class SHARED shared
+    class PRINT2,FOAM2,BOX2,WOOD2 std
+      </div>
+    </div>
+  </div>
+
+  <div class="talk">
+    Today, pricing capability follows division. Print got the Apex Estimator with cost-plus and a bell curve; the others got spreadsheets and standalone tools. Anthony, you said yourself you have faith any of those could be replicated in Salesforce &mdash; the simpler ones in Flow, the complex ones with a tool like Pricing Procedure. RCA gives you that exact split. The framework stays consistent across all four divisions, but each division defines its own attribute set. Foam, BoxPop, and Wood get the same admin-friendly pricing engine as Print, just with their attributes plugged in. You stop maintaining four pricing systems and start maintaining one.
+  </div>
+
+  <div class="prompts">
+    <h4>Discussion prompts</h4>
+    <ul>
+      <li>Which division would you pilot the new model with after Print &mdash; Foam, BoxPop, or Woodworking?</li>
+      <li>What's blocking you from putting the spreadsheet logic into Salesforce today, beyond resources?</li>
+      <li>Does each division own its own attribute taxonomy, or do you want common attributes shared across?</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============== SLIDE 6: PAIN 3 — INFLEXIBLE CATALOG ============== -->
+<section class="slide">
+  <div class="eyebrow">Pain 3 of 5</div>
+  <h2>From "Bear to Update" to Drag-and-Drop</h2>
+
+  <div class="quote">
+    The print estimator while robust is a bear to update. Like fabric printing &mdash; we didn't have it when the estimator was designed. So that all had to be added after the fact and that can be a little clunky. We basically view everything as custom.
+    <span class="who">&mdash; Anthony Vozza, deep dive</span>
+  </div>
+
+  <div class="arch-compare">
+    <div class="arch-side before">
+      <h3>Today &mdash; Adding "fabric printing"</h3>
+      <div class="mermaid">
+flowchart TB
+    A1[Business asks for new product]
+    A2[File a dev ticket]
+    A3[Wait for sprint]
+    A4[Apex changes to Estimator]
+    A5[Visualforce page updates]
+    A6[QA + regression]
+    A7[Deploy]
+    A8["Live in 6-12 weeks"]
+
+    A1 --> A2 --> A3 --> A4 --> A5 --> A6 --> A7 --> A8
+
+    classDef pain fill:#FFEBEE,stroke:#C62828,color:#B71C1C,stroke-width:2px
+    classDef std fill:#E3F2FD,stroke:#1565C0
+    class A2,A3,A4,A5,A6,A7,A8 pain
+    class A1 std
+      </div>
+    </div>
+    <div class="arch-side after">
+      <h3>Tomorrow &mdash; Adding a new product in RCA</h3>
+      <div class="mermaid">
+flowchart TB
+    B1[Business asks for new product]
+    B2[Admin opens EPC]
+    B3["Drag-and-drop new<br/>Product2 with attributes"]
+    B4[Configure Pricing Procedure]
+    B5[Activate]
+    B6["Live same day"]
+
+    B1 --> B2 --> B3 --> B4 --> B5 --> B6
+
+    classDef gain fill:#E8F5E9,stroke:#2E7D32,color:#1B5E20,stroke-width:2px
+    classDef std fill:#E3F2FD,stroke:#1565C0
+    class B2,B3,B4,B5,B6 gain
+    class B1 std
+      </div>
+    </div>
+  </div>
+
+  <div class="talk">
+    The fabric-printing example you mentioned is the perfect test case. Today, adding a new banner type to the Estimator is a development cycle &mdash; weeks of work, regression testing, deploy. In RCA, an admin drags-and-drops a new Product2 with its attributes, configures pricing, and activates. Same day. The "Home Depot-style" search UI you saw in the Mitch demo is what your reps see when they go shopping for that new product on a quote.
+  </div>
+
+  <div class="prompts">
+    <h4>Discussion prompts</h4>
+    <ul>
+      <li>What's the most recent product change you wanted to make and couldn't?</li>
+      <li>Who would own catalog updates &mdash; Anthony, Colin, or someone in the business?</li>
+      <li>Should we test this with one product the team has been wanting to add?</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============== SLIDE 7: PAIN 4 — RESOURCE CONSTRAINTS ============== -->
+<section class="slide">
+  <div class="eyebrow">Pain 4 of 5</div>
+  <h2>Two-Person Team, Massive Surface Area</h2>
+
+  <div class="quote">
+    The entire IT shop is just two people. We're hesitant to take on massive dev projects and prefer admin-friendly configurations moving forward.
+    <span class="who">&mdash; Anthony &amp; Colin</span>
+  </div>
+
+  <div class="arch-compare">
+    <div class="arch-side before">
+      <h3>Today &mdash; Code-first maintenance</h3>
+      <div class="mermaid">
+flowchart TB
+    DEV[Developer]
+    APEX[Apex Class]
+    VF[Visualforce]
+    TRIG[Triggers]
+    ORG1[Production]
+
+    DEV -- "writes" --> APEX
+    DEV -- "writes" --> VF
+    DEV -- "writes" --> TRIG
+    APEX --> ORG1
+    VF --> ORG1
+    TRIG --> ORG1
+
+    classDef pain fill:#FFEBEE,stroke:#C62828,color:#B71C1C,stroke-width:2px
+    classDef std fill:#E3F2FD,stroke:#1565C0
+    class APEX,VF,TRIG pain
+    class DEV,ORG1 std
+      </div>
+    </div>
+    <div class="arch-side after">
+      <h3>Tomorrow &mdash; Admin-first maintenance</h3>
+      <div class="mermaid">
+flowchart TB
+    ADMIN[Admin]
+    EPC[Catalog]
+    PP[Pricing Procedure]
+    FLOW[Flow]
+    ORG2[Production]
+
+    ADMIN -- "configures" --> EPC
+    ADMIN -- "configures" --> PP
+    ADMIN -- "configures" --> FLOW
+    EPC --> ORG2
+    PP --> ORG2
+    FLOW --> ORG2
+
+    classDef gain fill:#E8F5E9,stroke:#2E7D32,color:#1B5E20,stroke-width:2px
+    classDef std fill:#E3F2FD,stroke:#1565C0
+    class EPC,PP,FLOW gain
+    class ADMIN,ORG2 std
+      </div>
+    </div>
+  </div>
+
+  <p style="font-size: 16px; margin-top: 18px;">
+    <span class="pill insight">Reality check</span>
+    Some things will still need code. Britten's bespoke math (waste %, complexity-based labor) deserves an Apex action &mdash; but it's <em>isolated</em> code that plugs into the standard framework. Not a custom application.
+  </p>
+
+  <div class="talk">
+    The honest version of this is: you'll still write some code. There are pieces of your pricing math that are genuinely unique to Britten and don't belong in a declarative tool. But what changes is where that code lives. Today, your code <em>is</em> the application. Tomorrow, your code is small, isolated callouts that plug into a standard framework you didn't have to build. Anthony, that's the difference between maintaining 40,000 lines of Apex and maintaining 2,000.
+  </div>
+
+  <div class="prompts">
+    <h4>Discussion prompts</h4>
+    <ul>
+      <li>Of your current Apex codebase, which pieces would you happily delete tomorrow if RCA covered them?</li>
+      <li>Which pieces would you keep on principle, because they encode something genuinely unique?</li>
+      <li>What's a realistic ratio of admin-changes to dev-changes you'd want post-migration?</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============== SLIDE 8: PAIN 5 — DECOMPOSITION ============== -->
+<section class="slide">
+  <div class="eyebrow">Pain 5 of 5</div>
+  <h2>Decomposition: One Line, Many Realities</h2>
+
+  <div class="quote">
+    We have processes and methods in place where 100 different art files can remain one line in the system &mdash; it's just a special art process. But the &lsquo;quote vs. order vs. invoice should match&rsquo; problem? That has come up several times.
+    <span class="who">&mdash; Anthony Vozza, deep dive</span>
+  </div>
+
+  <div class="arch-compare">
+    <div class="arch-side before">
+      <h3>Today &mdash; Junction objects between Job &amp; Invoice</h3>
+      <div class="mermaid">
+flowchart TB
+    QL["QuoteLineItem<br/>'Banner x100<br/>(100 art files)'"]
+    JI["Job_Item__c<br/>(stays 1 row &mdash;<br/>'special art process')"]
+    F1["Fulfillment__c<br/>Ship to State A"]
+    F2["Fulfillment__c<br/>Ship to State B"]
+    ILI1["Invoice_Line_Item__c<br/>State A"]
+    ILI2["Invoice_Line_Item__c<br/>State B"]
+    INV["Invoice__c<br/>(or split per customer ask)"]
+
+    QL -- "copied on Closed-Won" --> JI
+    JI --> F1
+    JI --> F2
+    F1 --> ILI1
+    F2 --> ILI2
+    ILI1 --> INV
+    ILI2 --> INV
+
+    classDef pain fill:#FFEBEE,stroke:#C62828,color:#B71C1C,stroke-width:2px
+    classDef std fill:#E3F2FD,stroke:#1565C0
+    class JI,F1,F2,ILI1,ILI2,INV pain
+    class QL std
+      </div>
+    </div>
+    <div class="arch-side after">
+      <h3>Tomorrow &mdash; Native decomposition</h3>
+      <div class="mermaid">
+flowchart TB
+    QL2["RCA Quote Line<br/>'Banner x100'"]
+    ORDER2["RCA Order Line"]
+    FOLI1["Fulfillment Order Line:<br/>State A"]
+    FOLI2["Fulfillment Order Line:<br/>State B"]
+    INV2A["RCA Invoice<br/>(one or many)"]
+
+    QL2 -- "copied on Closed-Won" --> ORDER2
+    ORDER2 -- "decomposition rule" --> FOLI1
+    ORDER2 -- "decomposition rule" --> FOLI2
+    FOLI1 --> INV2A
+    FOLI2 --> INV2A
+
+    classDef gain fill:#E8F5E9,stroke:#2E7D32,color:#1B5E20,stroke-width:2px
+    classDef std fill:#E3F2FD,stroke:#1565C0
+    class ORDER2,FOLI1,FOLI2,INV2A gain
+    class QL2 std
+      </div>
+    </div>
+  </div>
+
+  <p style="font-size: 16px; margin-top: 18px;">
+    <span class="pill gain">The real win</span>
+    Anthony, you told us the customer-side mismatch &mdash; quote vs. order vs. invoice &mdash; has come up several times. RCA decomposition gives you one commercial line the customer signs, with N fulfillment lines underneath that the production floor and shipping team see. No Fulfillment__c + Invoice_Line_Item__c gymnastics in the middle.
+  </p>
+
+  <div class="talk">
+    This is the slide I think will resonate most because you've already built the workaround. The 100-art-files trick that keeps it as one line is clever &mdash; but the moment a customer ships to two states, you fan out into Fulfillment__c, then Invoice_Line_Item__c as the junction back to one Invoice. RCA does that natively: one Order Line splits into N Fulfillment Order Line Items based on decomposition rules you configure once. Quality team sees one task. State A shipping team sees another. Finance sees one invoice (or many, when the customer asks). Customer sees one quote line. You stop maintaining the glue between Job_Item__c, Fulfillment__c, and Invoice_Line_Item__c.
+  </div>
+
+  <div class="prompts">
+    <h4>Discussion prompts</h4>
+    <ul>
+      <li>Walk us through your most complex real example &mdash; the one with the most fulfillment activities behind one quote line.</li>
+      <li>Today, where does the "where is this job?" question get answered? Who has visibility?</li>
+      <li>If you could remove one custom junction object tomorrow, which one would it be?</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============== SLIDE 9: AREAS OF INTEREST — ATTRIBUTE-BASED CATALOG ============== -->
+<section class="slide">
+  <div class="eyebrow">Area of Interest</div>
+  <h2>Attribute-Based Catalog &mdash; Why It's Built for Britten</h2>
+  <p class="lede">"Everything is custom" is your reality. Attribute-based modeling is the platform's answer to that reality &mdash; without an explosion of SKUs.</p>
+
+  <div class="arch-compare">
+    <div class="arch-side before">
+      <h3>Traditional Approach &mdash; SKU explosion</h3>
+      <div class="mermaid">
+flowchart TB
+    P1["Banner-Vinyl-3x6-Glossy<br/>Banner-Vinyl-3x6-Matte<br/>Banner-Vinyl-3x6-UV<br/>Banner-Mesh-3x6-Glossy<br/>Banner-Mesh-3x6-Matte<br/>...<br/>10,000+ SKUs"]
+
+    classDef pain fill:#FFEBEE,stroke:#C62828,color:#B71C1C,stroke-width:2px
+    class P1 pain
+      </div>
+    </div>
+    <div class="arch-side after">
+      <h3>RCA Attribute-Based &mdash; Britten's model</h3>
+      <div class="mermaid">
+flowchart TB
+    BANNER["Banner<br/>(1 product)"]
+    A1["Material:<br/>Vinyl, Mesh, Decal"]
+    A2["Dimensions:<br/>W x H"]
+    A3["Finish:<br/>Glossy, Matte, UV"]
+    A4["Hardware:<br/>Yes / No"]
+    A5["Print method:<br/>Standard, UV, Fabric"]
+
+    BANNER --> A1
+    BANNER --> A2
+    BANNER --> A3
+    BANNER --> A4
+    BANNER --> A5
+
+    classDef gain fill:#E8F5E9,stroke:#2E7D32,color:#1B5E20,stroke-width:2px
+    classDef std fill:#E3F2FD,stroke:#1565C0
+    class A1,A2,A3,A4,A5 gain
+    class BANNER std
+      </div>
+    </div>
+  </div>
+
+  <div class="talk">
+    Anthony, you said it directly: "we basically view everything as custom &mdash; a base product is a banner, but then it could be vinyl, mesh, decal, whatever. All those options are stored as fields on the job item." That mindset is fundamentally incompatible with a traditional SKU catalog &mdash; which is why you never built one, and why CPQ wasn't right when you looked at it years ago. RCA is built around exactly your worldview: one logical product, many attributes, infinite combinations. A banner is a banner. The attributes determine what it costs, what it ships as, how it's fulfilled. And when fabric printing comes along next time, an admin adds an attribute &mdash; not a developer adding fields to Job_Item__c.
+  </div>
+</section>
+
+<!-- ============== SLIDE 10: HEADLESS / API-FIRST ============== -->
+<section class="slide">
+  <div class="eyebrow">Area of Interest</div>
+  <h2>Modular &amp; Headless &mdash; Use Only What You Need</h2>
+  <p class="lede">You have customer portals and a working Business Central integration. RCA's API-first design means you adopt the pieces you want and leave the rest.</p>
+
+  <div class="diagram-frame">
+    <div class="mermaid">
+flowchart TB
+    subgraph EXT["External Systems (unchanged)"]
+      PORTAL[Customer Portal A<br/>pulls orders /API]
+      PORTAL2[Customer Portal B<br/>pulls orders /API]
+      BC["MS Business Central<br/>(finance + supply chain)"]
+      AVA[Avalara]
+      AUTH["Authorize.net<br/>(checks/ACH still common)"]
+      ILLUS["Adobe Illustrator<br/>(art team)"]
+    end
+
+    subgraph RCA["Revenue Cloud Advanced (modular &mdash; SF stays your MIS)"]
+      direction LR
+      CAT["Product Catalog<br/>+ Pricing"]
+      CPQ["Configure Price Quote"]
+      ORDER["Order &amp; Decomposition"]
+      INV["Invoice<br/>(starts in SF, then BC)"]
+      BILL["RCA Billing<br/>(NOT adopted)"]
+    end
+
+    PORTAL -->|API| ORDER
+    PORTAL2 -->|API| ORDER
+    INV -->|existing feed| BC
+    INV -->|existing call| AVA
+    INV -.->|cards| AUTH
+    ORDER -.->|art file refs| ILLUS
+
+    classDef ext fill:#ECEFF1,stroke:#455A64
+    classDef gain fill:#E8F5E9,stroke:#2E7D32
+    classDef skip fill:#F3F3F3,stroke:#999,color:#999,stroke-dasharray:5
+    class PORTAL,PORTAL2,BC,AVA,AUTH,ILLUS ext
+    class CAT,CPQ,ORDER,INV gain
+    class BILL skip
+    </div>
+  </div>
+
+  <p style="font-size: 16px; margin-top: 18px;">
+    <span class="pill gain">What you adopt</span> Catalog, Pricing, CPQ, Order/Decomposition, Salesforce-side Invoice<br/>
+    <span class="pill" style="background: #F3F3F3; color: #666; border: 1px solid #999; margin-top: 8px;">What you skip</span> RCA Billing engine &mdash; Business Central remains the financial system of record
+  </p>
+
+  <div class="talk">
+    Anthony, you described Salesforce as your MIS &mdash; not just CRM. We're keeping it that way. Some customers buy RCA and adopt every module. You don't have to. Business Central works for both finance and supply chain. Avalara works. The customer portals that pull orders every few hours stay exactly as they are &mdash; they just hit the new RCA Order object instead of a custom one. Adobe Illustrator stays as the art team's source of truth. RCA is API-first &mdash; the pieces you adopt expose APIs to the systems you keep. We're suggesting you take Catalog, Pricing, CPQ, Order, and the Salesforce-side Invoice. We're explicitly suggesting you <em>skip</em> the RCA Billing engine because Business Central already does that job well &mdash; and your accounting team's check/ACH workflow doesn't need disruption.
+  </div>
+
+  <div class="prompts">
+    <h4>Discussion prompts</h4>
+    <ul>
+      <li>Which of your existing integrations would you most want to keep exactly as-is?</li>
+      <li>Are there any portal integrations we haven't accounted for?</li>
+      <li>If we adopted just Catalog and Pricing first &mdash; would that solve enough to be worth doing?</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============== SLIDE 11: MIGRATION PATH ============== -->
+<section class="slide">
+  <div class="eyebrow">How we get there</div>
+  <h2>The Migration Path</h2>
+  <p class="lede">Standard objects replace custom ones, in a sequence designed to keep the production floor running every day.</p>
+
+  <div class="diagram-frame">
+    <div class="mermaid">
+flowchart LR
+    P0["Phase 0<br/>Discovery &amp;<br/>Migration Plan"] --> P1["Phase 1<br/>Catalog &amp;<br/>Attributes"]
+    P1 --> P2["Phase 2<br/>Pricing &amp;<br/>Parity Test"]
+    P2 --> P3["Phase 3<br/>New Quoting<br/>Experience"]
+    P3 --> P4["Phase 4<br/>Order &amp; Invoice<br/>Migration"]
+    P4 --> P5["Phase 5<br/>Pilot &amp; Go-Live<br/>(Print)"]
+    P5 --> P6["Phase 6<br/>Roll Out to<br/>Other Divisions"]
+
+    classDef phase fill:#E5F1FB,stroke:#0176D3,color:#032D60
+    class P0,P1,P2,P3,P4,P5,P6 phase
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 18px;">
+    <div style="background: var(--gain-bg); border-left: 4px solid var(--gain); padding: 14px 18px; border-radius: 6px;">
+      <h4 style="margin: 0 0 6px; color: var(--gain);">What stays running the entire time</h4>
+      <ul style="margin: 0; padding-left: 18px; font-size: 14px;">
+        <li>MS Business Central &mdash; finance <em>and</em> supply chain</li>
+        <li>Avalara tax calculation</li>
+        <li>Authorize.net (cards + checks/ACH)</li>
+        <li>Manufacturing floor screens (pre-press, print queues, QR job sheets)</li>
+        <li>Customer-portal APIs (continue to pull orders every few hrs)</li>
+        <li>Adobe Illustrator (art) &middot; Foam 3D SW &middot; Wood cabinet DB</li>
+        <li>"Invoice must start in Salesforce" rule &mdash; preserves division buy-in</li>
+      </ul>
+    </div>
+    <div style="background: var(--insight-bg); border-left: 4px solid var(--insight); padding: 14px 18px; border-radius: 6px;">
+      <h4 style="margin: 0 0 6px; color: var(--insight);">The "no go-live without" gates</h4>
+      <ul style="margin: 0; padding-left: 18px; font-size: 14px;">
+        <li>Pricing parity proven on 12+ months of historical quotes</li>
+        <li>Data-migration plan signed off by Anthony &amp; Colin</li>
+        <li>Constraint Builder demonstrated against a real Britten rule</li>
+        <li>Manufacturing floor regression-tested end-to-end</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="talk">
+    This isn't a big-bang. It's six phases, sequenced so that production never stops. Phase zero is the architecture review &mdash; the partner returns with their data-migration plan and a Constraint Builder example against your actual pricing rules. Each phase has a clear gate before we move on. And the most important thing on this slide isn't the boxes &mdash; it's the green panel on the bottom left. The financial system, payments, tax, and the production floor all stay running every single day.
+  </div>
+</section>
+
+<!-- ============== SLIDE 12: WHERE WE NEED YOU ============== -->
+<section class="slide">
+  <div class="eyebrow">Your turn</div>
+  <h2>Where We Need You to Help Us Decide</h2>
+  <p class="lede">Three open questions where Britten's input shapes the recommendation.</p>
+
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 24px 0;">
+
+    <div style="background: white; border-top: 4px solid var(--insight); padding: 20px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">
+      <div class="pill insight">Question 1</div>
+      <h3 style="margin: 12px 0 8px; color: var(--sf-navy);">Pilot Division</h3>
+      <p style="font-size: 14px;">Print first is the obvious choice (mature data, clearest pricing). After Print, which division do we tackle next: Foam, BoxPop, or Woodworking?</p>
+    </div>
+
+    <div style="background: white; border-top: 4px solid var(--insight); padding: 20px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">
+      <div class="pill insight">Question 2</div>
+      <h3 style="margin: 12px 0 8px; color: var(--sf-navy);">Phase 1 Pricing Test</h3>
+      <p style="font-size: 14px;">Pick the gnarliest pricing rule from the Estimator. The partner will model it in Constraint Builder and bring it back in two weeks as proof.</p>
+    </div>
+
+    <div style="background: white; border-top: 4px solid var(--insight); padding: 20px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">
+      <div class="pill insight">Question 3</div>
+      <h3 style="margin: 12px 0 8px; color: var(--sf-navy);">Parity Sign-Off</h3>
+      <p style="font-size: 14px;">Who signs off on pricing parity before go-live? Anthony? Sales leadership? Finance? We need a named human, not a role.</p>
+    </div>
+
+  </div>
+
+  <div class="talk">
+    These three questions are where we need your judgment, not ours. The first two are about scope; the third is about governance. If we get answers to these by the end of next week, the partner can come back with a sharper proposal. Let's spend the rest of our time today on these &mdash; and on anything else still nagging at you.
+  </div>
+</section>
+
+<!-- ============== SLIDE 13: NEXT STEPS ============== -->
+<section class="slide">
+  <div class="eyebrow">Close</div>
+  <h2>What Happens Next</h2>
+
+  <div style="display: grid; grid-template-columns: 80px 1fr 200px; gap: 16px; align-items: center; margin: 24px 0;">
+
+    <div style="text-align: center; font-size: 32px; font-weight: 700; color: var(--sf-blue);">1</div>
+    <div>
+      <h3 style="margin: 0 0 4px; color: var(--sf-navy);">Workshop summary &amp; diagrams sent</h3>
+      <p style="margin: 0; font-size: 14px; color: var(--sf-grey-700);">Including this deck, the parking lot, and the open questions.</p>
+    </div>
+    <div style="font-size: 13px; color: var(--sf-grey-700);"><b>Owner:</b> Salesforce<br/><b>By:</b> Within 48 hours</div>
+
+    <div style="text-align: center; font-size: 32px; font-weight: 700; color: var(--sf-blue);">2</div>
+    <div>
+      <h3 style="margin: 0 0 4px; color: var(--sf-navy);">Partner returns with proof</h3>
+      <p style="margin: 0; font-size: 14px; color: var(--sf-grey-700);">Data-migration plan + Constraint Builder modeled against the real Britten rule we picked today.</p>
+    </div>
+    <div style="font-size: 13px; color: var(--sf-grey-700);"><b>Owner:</b> Implementation partner<br/><b>By:</b> 2 weeks</div>
+
+    <div style="text-align: center; font-size: 32px; font-weight: 700; color: var(--sf-blue);">3</div>
+    <div>
+      <h3 style="margin: 0 0 4px; color: var(--sf-navy);">Deeper session: Order &amp; Decomposition</h3>
+      <p style="margin: 0; font-size: 14px; color: var(--sf-grey-700);">With manufacturing leadership in the room. Walk through real fulfillment flows.</p>
+    </div>
+    <div style="font-size: 13px; color: var(--sf-grey-700);"><b>Owner:</b> Salesforce + Britten<br/><b>By:</b> 3 weeks</div>
+
+  </div>
+
+  <div class="talk">
+    Three concrete commitments before we close. I'll send the summary and these diagrams within 48 hours. The partner will come back in two weeks with a working Constraint Builder example against the rule we picked together &mdash; not a generic demo. And we'll schedule the order-and-decomposition deep dive in three weeks with your manufacturing leadership in the room. Anthony, Colin &mdash; thank you for the time today.
+  </div>
+</section>
+
+<!-- ============== SLIDE 14: THANK YOU ============== -->
+<section class="slide cover">
+  <div class="eyebrow" style="color: white; opacity: 0.8;">Thank you</div>
+  <h1 style="font-size: 60px;">Anthony &amp; Colin</h1>
+  <div class="sub" style="margin-top: 8px;">15 years at Britten &middot; 4 years admin &middot; built it twice over</div>
+  <div class="sub">Your decade of judgment is what makes this project possible.</div>
+  <div class="meta">Questions or pushback &mdash; bring them. That's the most useful thing you can do.</div>
+</section>
+
+</body>
+</html>
