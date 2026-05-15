@@ -80,11 +80,13 @@
             console.log("[MIAW] Session status update:", status);
             logEvent("Session status: " + status);
             if (status === "ENDED") {
-                logEvent("Agent ended chat - clearing session...");
+                logEvent("Agent ended chat - clearing session and reloading widget...");
                 embeddedservice_bootstrap.utilAPI.clearSession().then(function() {
-                    logEvent("Session cleared successfully");
+                    logEvent("Session cleared - reloading page...");
+                    window.location.reload();
                 }).catch(function(err) {
                     logEvent("Error clearing session: " + err);
+                    window.location.reload();
                 });
             }
         });
