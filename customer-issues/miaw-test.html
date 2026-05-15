@@ -34,25 +34,28 @@
     </style>
 </head>
 <body>
-    <h1>MIAW Session-Based Chat - Abandonment Test</h1>
+    <h1>MIAW - Auto-Clear on Agent End Chat</h1>
 
     <div class="status info">
         Org: 00Dak00000sEqg8 | Deployment: SDO_Messaging_for_Web
     </div>
 
     <div class="test-steps">
-        <h2>Test Scenario: Customer Abandons During Queue Wait</h2>
+        <h2>Test: Agent ends chat, widget auto-clears</h2>
         <ol>
             <li>Click the chat widget (bottom right) to start a session</li>
-            <li>Fill pre-chat form and send a few messages</li>
-            <li>Note the MessagingSession ID / start time</li>
-            <li>Close this browser tab (simulating customer abandonment)</li>
-            <li>Check the org - did the session end or is it still in queue?</li>
+            <li>Send a message and wait for an agent to accept</li>
+            <li>Have a brief conversation</li>
+            <li>Agent clicks "End Chat" in the Salesforce console</li>
+            <li>Watch the event log below - session should auto-clear</li>
         </ol>
     </div>
 
-    <div class="status warn">
-        This page is hosted externally to simulate a real customer visiting a website with the embedded chat widget.
+    <div class="test-steps">
+        <h2>Event Log</h2>
+        <div id="event-log" style="font-family: monospace; font-size: 13px; max-height: 300px; overflow-y: auto; color: #555;">
+            <div>Waiting for events...</div>
+        </div>
     </div>
 
     <script type="text/javascript">
@@ -70,6 +73,27 @@
             } catch (err) {
                 console.error('Error loading Embedded Messaging: ', err);
             }
+        }
+
+        window.addEventListener("onEmbeddedMessagingSessionStatusUpdate", function(e) {
+            var status = e.detail && e.detail.sessionStatus;
+            console.log("[MIAW] Session status update:", status);
+            logEvent("Session status: " + status);
+            if (status === "ENDED") {
+                logEvent("Agent ended chat - clearing session...");
+                embeddedservice_bootstrap.utilAPI.clearSession().then(function() {
+                    logEvent("Session cleared successfully");
+                }).catch(function(err) {
+                    logEvent("Error clearing session: " + err);
+                });
+            }
+        });
+
+        function logEvent(msg) {
+            var log = document.getElementById("event-log");
+            var entry = document.createElement("div");
+            entry.textContent = new Date().toLocaleTimeString() + " - " + msg;
+            log.prepend(entry);
         }
     </script>
     <script type="text/javascript"
