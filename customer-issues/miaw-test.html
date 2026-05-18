@@ -59,6 +59,17 @@
     </div>
 
     <script type="text/javascript">
+        // Passive listener for ALL postMessage events from the widget iframe
+        window.addEventListener("message", function(e) {
+            if (e.data && typeof e.data === "object") {
+                var msg = e.data.method || e.data.type || e.data.event || JSON.stringify(e.data).substring(0, 120);
+                console.log("[MIAW-MSG]", msg, e.data);
+                logEvent("MSG: " + msg);
+            }
+        });
+    </script>
+
+    <script type="text/javascript">
         function initEmbeddedMessaging() {
             try {
                 embeddedservice_bootstrap.settings.language = 'en_US';
@@ -75,20 +86,25 @@
             }
         }
 
-        window.addEventListener("onEmbeddedMessagingSessionStatusUpdate", function(e) {
-            var status = e.detail && e.detail.sessionStatus;
-            console.log("[MIAW] Session status update:", status);
-            logEvent("Session status: " + status);
-            if (status === "ENDED") {
-                logEvent("Agent ended chat - clearing session and reloading widget...");
-                embeddedservice_bootstrap.utilAPI.clearSession().then(function() {
-                    logEvent("Session cleared - reloading page...");
-                    window.location.reload();
-                }).catch(function(err) {
-                    logEvent("Error clearing session: " + err);
-                    window.location.reload();
-                });
-            }
+        // Listen for all "onEmbeddedMessaging*" events
+        var embeddedEvents = [
+            "onEmbeddedMessagingReady",
+            "onEmbeddedMessagingInitSuccess",
+            "onEmbeddedMessagingInitError",
+            "onEmbeddedMessagingButtonClicked",
+            "onEmbeddedMessagingWindowMinimized",
+            "onEmbeddedMessagingWindowMaximized",
+            "onEmbeddedMessagingConversationStarted",
+            "onEmbeddedMessagingSessionStatusUpdate",
+            "onEmbeddedMessagingSessionEnded",
+            "onEmbeddedMessagingConversationEnd",
+            "onEmbeddedMessagingWindowClosed"
+        ];
+        embeddedEvents.forEach(function(evName) {
+            window.addEventListener(evName, function(e) {
+                console.log("[MIAW-EVENT]", evName, e.detail);
+                logEvent("EVENT: " + evName + " | " + JSON.stringify(e.detail || {}));
+            });
         });
 
         function logEvent(msg) {
